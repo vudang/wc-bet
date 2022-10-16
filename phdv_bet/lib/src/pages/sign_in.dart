@@ -1,15 +1,13 @@
-// Copyright 2020, the Flutter project authors. Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'package:firebase_auth/firebase_auth.dart' as FirebaseAuthen;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:web_dashboard/src/auth/firebase.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/app_textfield_border.dart';
 import 'package:web_dashboard/src/widgets/indicator.dart';
-
+import '../assets.dart';
 import '../auth/auth.dart';
 import '../widgets/app_button.dart';
 
@@ -26,8 +24,17 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SignInForm(auth: auth, onSuccess: onSuccess),
+      body: Stack(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Image.asset(Assets.images.background, fit: BoxFit.fill),
+          ),
+          Center(
+            child: SignInForm(auth: auth, onSuccess: onSuccess),
+          )
+        ],
       ),
     );
   }
@@ -51,6 +58,7 @@ class _SignInFormState extends State<SignInForm> {
   Future<bool>? _checkSignInFuture;
   final _emailController = TextEditingController(text: "");
   final _passwordController = TextEditingController(text: "");
+  var _isSecurePassword = true;
 
   @override
   void initState() {
@@ -132,6 +140,13 @@ class _SignInFormState extends State<SignInForm> {
                 AppTextFieldBorder(
                   controller: _passwordController,
                   placeholder: "******",
+                  obscureText: _isSecurePassword,
+                  suffixIcon: IconButton(
+                    icon: _isSecurePassword ? Icon(CupertinoIcons.eye_solid, color: SystemColor.GREY) : Icon(CupertinoIcons.eye_slash_fill, color: SystemColor.GREY),
+                    onPressed: () {
+                      setState(() => _isSecurePassword = !_isSecurePassword);
+                    },
+                  ),
                 ),
                 SizedBox(height: 40),
                 AppSystemRegularButton(
@@ -164,7 +179,10 @@ class _SignInFormState extends State<SignInForm> {
     _signIn();
   }
 
-  _contactUsPressed() {}
+  _contactUsPressed() {
+    final uri = Uri.parse("https://forms.gle/5tb3aSsc3UfpnXP1A");
+    launchUrl(uri);
+  }
 
   _showError() {
     ScaffoldMessenger.of(context).showSnackBar(

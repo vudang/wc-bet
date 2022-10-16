@@ -12,14 +12,18 @@ class AppTextFieldBorder extends StatelessWidget {
   final bool autofocus;
   final bool readOnly;
   final FocusNode? focusNode;
+  final bool obscureText;
+  final Widget? suffixIcon;
 
   const AppTextFieldBorder({
     Key? key,
     required this.controller,
     this.onFieldSubmitted,
+    this.obscureText = false,
+    this.suffixIcon,
     this.onChanged,
     this.placeholder = "",
-    this.maxLines,
+    this.maxLines = 1,
     this.maxLength,
     this.autofocus = true,
     this.readOnly = false,
@@ -37,6 +41,7 @@ class AppTextFieldBorder extends StatelessWidget {
       autofocus: autofocus,
       maxLines: maxLines,
       maxLength: maxLength,
+      obscureText: obscureText,
       style: TextStyle(
         color: SystemColor.BLACK,
         fontSize: 20,
@@ -51,6 +56,7 @@ class AppTextFieldBorder extends StatelessWidget {
         hintText: placeholder,
         counterText: "",
         border: InputBorder.none,
+        suffixIcon: suffixIcon,
         hintStyle: TextStyle(
           color: SystemColor.GREY,
           fontWeight: FontWeight.w700,

@@ -16,5 +16,5 @@ class AppIcons {
 
 class AppImages {
   static const String root = "assets/images";
-  final String logo = "$root/logo.png";
+  final String background = "$root/wc_bg.png";
 }
