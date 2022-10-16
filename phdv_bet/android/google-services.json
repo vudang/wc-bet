@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "452255726009",
+    "project_id": "worldbet-aaa29",
+    "storage_bucket": "worldbet-aaa29.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452255726009:android:009d1d6cb4c83575689e68",
+        "android_client_info": {
+          "package_name": "com.ph.bet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452255726009-0mcoegk52rmig5f0tsuqfcr5hrtijoh4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC85xdM1SZrAXdwj59qsDBtsPpreixyHRo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452255726009-0mcoegk52rmig5f0tsuqfcr5hrtijoh4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "452255726009-g6gc2fsojosfdgpnf9vjsd7e7kr90tl3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ph.bet"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

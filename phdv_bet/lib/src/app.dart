@@ -8,10 +8,8 @@ import 'package:provider/provider.dart';
 
 import 'api/api.dart';
 import 'api/firebase.dart';
-import 'api/mock.dart';
 import 'auth/auth.dart';
 import 'auth/firebase.dart';
-import 'auth/mock.dart';
 import 'pages/home.dart';
 import 'pages/sign_in.dart';
 
@@ -30,8 +28,6 @@ typedef ApiBuilder = DashboardApi Function(User user);
 
 /// An app that displays a personalized dashboard.
 class DashboardApp extends StatefulWidget {
-  static DashboardApi _mockApiBuilder(User user) =>
-      MockDashboardApi()..fillWithMockData();
   static DashboardApi _apiBuilder(User user) =>
       FirebaseDashboardApi(FirebaseFirestore.instance, user.uid);
 
@@ -39,14 +35,7 @@ class DashboardApp extends StatefulWidget {
   final ApiBuilder apiBuilder;
 
   /// Runs the app using Firebase
-  DashboardApp.firebase({super.key})
-      : auth = FirebaseAuthService(),
-        apiBuilder = _apiBuilder;
-
-  /// Runs the app using mock data
-  DashboardApp.mock({super.key})
-      : auth = MockAuthService(),
-        apiBuilder = _mockApiBuilder;
+  DashboardApp.firebase({super.key}) : auth = FirebaseAuthService(), apiBuilder = _apiBuilder ;
 
   @override
   State<DashboardApp> createState() => _DashboardAppState();
@@ -66,6 +55,7 @@ class _DashboardAppState extends State<DashboardApp> {
     return Provider.value(
       value: _appState,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: SignInSwitcher(
           appState: _appState,
           apiBuilder: widget.apiBuilder,
