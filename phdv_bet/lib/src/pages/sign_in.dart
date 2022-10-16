@@ -2,9 +2,16 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_auth/firebase_auth.dart' as FirebaseAuthen;
 import 'package:flutter/material.dart';
+import 'package:web_dashboard/src/auth/firebase.dart';
+import 'package:web_dashboard/src/color.dart';
+import 'package:web_dashboard/src/widgets/app_text.dart';
+import 'package:web_dashboard/src/widgets/app_textfield_border.dart';
+import 'package:web_dashboard/src/widgets/indicator.dart';
 
 import '../auth/auth.dart';
+import '../widgets/app_button.dart';
 
 class SignInPage extends StatelessWidget {
   final Auth auth;
@@ -20,28 +27,30 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SignInButton(auth: auth, onSuccess: onSuccess),
+        child: SignInForm(auth: auth, onSuccess: onSuccess),
       ),
     );
   }
 }
 
-class SignInButton extends StatefulWidget {
+class SignInForm extends StatefulWidget {
   final Auth auth;
   final ValueChanged<User> onSuccess;
 
-  const SignInButton({
+  const SignInForm({
     required this.auth,
     required this.onSuccess,
     super.key,
   });
 
   @override
-  State<SignInButton> createState() => _SignInButtonState();
+  State<SignInForm> createState() => _SignInFormState();
 }
 
-class _SignInButtonState extends State<SignInButton> {
+class _SignInFormState extends State<SignInForm> {
   Future<bool>? _checkSignInFuture;
+  final _emailController = TextEditingController(text: "");
+  final _passwordController = TextEditingController(text: "");
 
   @override
   void initState() {
@@ -49,13 +58,11 @@ class _SignInButtonState extends State<SignInButton> {
     _checkSignInFuture = _checkIfSignedIn();
   }
 
-  // Check if the user is signed in. If the user is already signed in (for
-  // example, if they signed in and refreshed the page), invoke the `onSuccess`
-  // callback right away.
   Future<bool> _checkIfSignedIn() async {
     var alreadySignedIn = await widget.auth.isSignedIn;
     if (alreadySignedIn) {
-      var user = await widget.auth.signIn();
+      final user = FirebaseUser(FirebaseAuthen.FirebaseAuth.instance.currentUser!.uid);
+      print("Already auth with user: ${user.uid}");
       widget.onSuccess(user);
     }
     return alreadySignedIn;
@@ -63,9 +70,14 @@ class _SignInButtonState extends State<SignInButton> {
 
   Future<void> _signIn() async {
     try {
-      var user = await widget.auth.signIn();
-      widget.onSuccess(user);
+      Indicator.show(context);
+      var user = await widget.auth.signIn(username: _emailController.text, password: _passwordController.text);
+      Indicator.hide(context);
+      if (user != null) {
+        widget.onSuccess(user);
+      }
     } on SignInException {
+      Indicator.hide(context);
       _showError();
     }
   }
@@ -75,28 +87,86 @@ class _SignInButtonState extends State<SignInButton> {
     return FutureBuilder<bool>(
       future: _checkSignInFuture,
       builder: (context, snapshot) {
-        // If signed in, or the future is incomplete, show a circular
-        // progress indicator.
         var alreadySignedIn = snapshot.data;
-        if (snapshot.connectionState != ConnectionState.done ||
-            alreadySignedIn == true) {
+        if (snapshot.connectionState != ConnectionState.done || alreadySignedIn == true) {
           return const CircularProgressIndicator();
         }
 
-        // If sign in failed, show toast and the login button
         if (snapshot.hasError) {
           _showError();
         }
 
-        return ElevatedButton(
-          child: const Text('Sign In with Google'),
-          onPressed: () => _signIn(),
-        );
+        return _loginForm();
       },
     );
   }
 
-  void _showError() {
+  Widget _loginForm() {
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          elevation: 3,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppText("Sign In", weight: FontWeight.w700, size: 28),
+                SizedBox(height: 20),
+                AppText("Username"),
+                SizedBox(height: 5),
+                AppTextFieldBorder(
+                  controller: _emailController,
+                  placeholder: "abc@bet.com",
+                  autofocus: true,
+                ),
+                SizedBox(height: 20),
+                AppText("Password"),
+                SizedBox(height: 5),
+                AppTextFieldBorder(
+                  controller: _passwordController,
+                  placeholder: "******",
+                ),
+                SizedBox(height: 40),
+                AppSystemRegularButton(
+                  text: "Sign In",
+                  size: AppButtonSize.huge,
+                  onPressed: () => _signInPressed()
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: TextButton(
+                      onPressed: () => _contactUsPressed(),
+                      child: AppText(
+                        "Contact Us",
+                        size: 15,
+                        color: SystemColor.GREY,
+                        weight: FontWeight.w600,
+                        fontStyle: FontStyle.italic,
+                      )
+                  ),
+                )
+              ],
+            ),
+          )
+        ),
+      ),
+    );
+  }
+
+  _signInPressed() {
+    _signIn();
+  }
+
+  _contactUsPressed() {}
+
+  _showError() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Unable to sign in.'),

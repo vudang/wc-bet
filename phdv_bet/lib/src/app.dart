@@ -5,6 +5,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_dashboard/src/color.dart';
 
 import 'api/api.dart';
 import 'api/firebase.dart';
@@ -14,6 +15,7 @@ import 'pages/home.dart';
 import 'pages/sign_in.dart';
 
 /// The global state the app.
+
 class AppState {
   final Auth auth;
   DashboardApi? api;

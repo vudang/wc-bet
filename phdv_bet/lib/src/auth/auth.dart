@@ -4,7 +4,7 @@
 
 abstract class Auth {
   Future<bool> get isSignedIn;
-  Future<User> signIn();
+  Future<User?> signIn({required String username, required String password});
   Future signOut();
 }
 

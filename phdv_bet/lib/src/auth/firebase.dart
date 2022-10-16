@@ -10,51 +10,53 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'auth.dart';
 
 class FirebaseAuthService implements Auth {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
-  Future<bool> get isSignedIn => _googleSignIn.isSignedIn();
+  Future<bool> get isSignedIn async {
+    return FirebaseAuth.instance.currentUser != null;
+  }
 
   @override
-  Future<User> signIn() async {
+  Future<User?> signIn({required String username, required String password}) async {
     try {
-      return await _signIn();
+      return await _signIn(username, password);
     } on PlatformException {
       throw SignInException();
     }
   }
 
-  Future<User> _signIn() async {
-    GoogleSignInAccount? googleUser;
-    if (await isSignedIn) {
-      googleUser = await _googleSignIn.signInSilently();
-    } else {
-      googleUser = await _googleSignIn.signIn();
+  Future<User?> _signIn(String username, String password) async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: username,
+        password: password,
+      );
+      print("Sign in success with user id: ${credential.user!.uid}");
+      return FirebaseUser(credential.user!.uid);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
     }
-
-    var googleAuth = await googleUser!.authentication;
-
-    var credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-
-    var authResult = await _auth.signInWithCredential(credential);
-
-    return _FirebaseUser(authResult.user!.uid);
+    return null;
   }
 
   @override
   Future<void> signOut() async {
     await Future.wait([
       _auth.signOut(),
-      _googleSignIn.signOut(),
     ]);
   }
 }
 
-class _FirebaseUser implements User {
+class FirebaseUser implements User {
   @override
   final String uid;
 
-  _FirebaseUser(this.uid);
+  FirebaseUser(this.uid);
 }
