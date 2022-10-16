@@ -1,0 +1,1 @@
+const PHOTO_COMPRESS_SIZE = 1000; // pixel

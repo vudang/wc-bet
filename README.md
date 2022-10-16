@@ -1,6 +1,6 @@
 ## DATA
 Fetch data from 
-```https://github.com/raminmr/free-api-worldcup2022```
+https://github.com/raminmr/free-api-worldcup2022
 
 ## Form for User register account 
 https://forms.gle/5tb3aSsc3UfpnXP1A

@@ -1,37 +1,29 @@
-// Copyright 2020, the Flutter project authors. Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/src/color.dart';
-
 import 'api/api.dart';
 import 'api/firebase.dart';
 import 'auth/auth.dart';
 import 'auth/firebase.dart';
-import 'pages/home.dart';
-import 'pages/sign_in.dart';
-
-/// The global state the app.
+import 'pages/home_screen.dart';
+import 'pages/auth_screen.dart';
 
 class AppState {
   final Auth auth;
-  DashboardApi? api;
+  Api? api;
 
   AppState(this.auth);
 }
 
-/// Creates a [DashboardApi] for the given user. This allows users of this
+/// Creates a [Api] for the given user. This allows users of this
 /// widget to specify whether [MockDashboardApi] or [ApiBuilder] should be
 /// created when the user logs in.
-typedef ApiBuilder = DashboardApi Function(User user);
+typedef ApiBuilder = Api Function(User user);
 
 /// An app that displays a personalized dashboard.
 class DashboardApp extends StatefulWidget {
-  static DashboardApi _apiBuilder(User user) =>
-      FirebaseDashboardApi(FirebaseFirestore.instance, user.uid);
+  static Api _apiBuilder(User user) => FirebaseApi(FirebaseFirestore.instance, user.uid);
 
   final Auth auth;
   final ApiBuilder apiBuilder;
@@ -58,6 +50,20 @@ class _DashboardAppState extends State<DashboardApp> {
       value: _appState,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            primarySwatch: MaterialColor(0xFFC8102E, <int, Color>{
+              50: Color(0xFFF3E5F5),
+              100: Color(0xFFE1BEE7),
+              200: Color(0xFFCE93D8),
+              300: Color(0xFFBA68C8),
+              400: Color(0xFFAB47BC),
+              500: Color(0xFFC8102E),
+              600: Color(0xFF8E24AA),
+              700: Color(0xFF7B1FA2),
+              800: Color(0xFF6A1B9A),
+              900: Color(0xFF4A148C),
+            },)
+        ),
         home: SignInSwitcher(
           appState: _appState,
           apiBuilder: widget.apiBuilder,
@@ -67,8 +73,6 @@ class _DashboardAppState extends State<DashboardApp> {
   }
 }
 
-/// Switches between showing the [SignInPage] or [HomePage], depending on
-/// whether or not the user is signed in.
 class SignInSwitcher extends StatefulWidget {
   final AppState? appState;
   final ApiBuilder? apiBuilder;
@@ -96,7 +100,7 @@ class _SignInSwitcherState extends State<SignInSwitcher> {
           ? HomePage(
               onSignOut: _handleSignOut,
             )
-          : SignInPage(
+          : SignInScreen(
               auth: widget.appState!.auth,
               onSuccess: _handleSignIn,
             ),

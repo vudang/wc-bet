@@ -1,15 +1,9 @@
-// Copyright 2020, the Flutter project authors. Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-
-import '../widgets/dialogs.dart';
+import 'package:web_dashboard/src/color.dart';
+import 'package:web_dashboard/src/widgets/app_text.dart';
 import '../widgets/third_party/adaptive_scaffold.dart';
-import 'dashboard.dart';
-import 'entries.dart';
+import 'match_screen.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback onSignOut;
@@ -29,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return AdaptiveScaffold(
-      title: const Text('Dashboard App'),
+      title: const AppText('PH 88', color: SystemColor.WHITE, weight: FontWeight.w700, size: 22,),
       actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -42,8 +36,8 @@ class _HomePageState extends State<HomePage> {
       ],
       currentIndex: _pageIndex,
       destinations: const [
-        AdaptiveScaffoldDestination(title: 'Home', icon: Icons.home),
-        AdaptiveScaffoldDestination(title: 'Entries', icon: Icons.list),
+        AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
+        AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
         AdaptiveScaffoldDestination(title: 'Settings', icon: Icons.settings),
       ],
       body: _pageAtIndex(_pageIndex),
@@ -52,39 +46,7 @@ class _HomePageState extends State<HomePage> {
           _pageIndex = newIndex;
         });
       },
-      floatingActionButton:
-          _hasFloatingActionButton ? _buildFab(context) : null,
     );
-  }
-
-  bool get _hasFloatingActionButton {
-    if (_pageIndex == 2) return false;
-    return true;
-  }
-
-  FloatingActionButton _buildFab(BuildContext context) {
-    return FloatingActionButton(
-      child: const Icon(Icons.add),
-      onPressed: () => _handleFabPressed(),
-    );
-  }
-
-  void _handleFabPressed() {
-    if (_pageIndex == 0) {
-      showDialog<NewCategoryDialog>(
-        context: context,
-        builder: (context) => const NewCategoryDialog(),
-      );
-      return;
-    }
-
-    if (_pageIndex == 1) {
-      showDialog<NewEntryDialog>(
-        context: context,
-        builder: (context) => const NewEntryDialog(),
-      );
-      return;
-    }
   }
 
   Future<void> _handleSignOut() async {
@@ -118,11 +80,11 @@ class _HomePageState extends State<HomePage> {
 
   static Widget _pageAtIndex(int index) {
     if (index == 0) {
-      return const DashboardPage();
+      return const MatchScreen();
     }
 
     if (index == 1) {
-      return const EntriesPage();
+      return const Center(child: Text('Ranking page'));
     }
 
     return const Center(child: Text('Settings page'));

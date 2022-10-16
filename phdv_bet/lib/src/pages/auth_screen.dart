@@ -11,11 +11,11 @@ import '../assets.dart';
 import '../auth/auth.dart';
 import '../widgets/app_button.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInScreen extends StatelessWidget {
   final Auth auth;
   final ValueChanged<User> onSuccess;
 
-  const SignInPage({
+  const SignInScreen({
     required this.auth,
     required this.onSuccess,
     super.key,
@@ -32,7 +32,7 @@ class SignInPage extends StatelessWidget {
             child: Image.asset(Assets.images.background, fit: BoxFit.cover),
           ),
           Center(
-            child: SignInForm(auth: auth, onSuccess: onSuccess),
+            child: _SignInForm(auth: auth, onSuccess: onSuccess),
           )
         ],
       ),
@@ -40,21 +40,21 @@ class SignInPage extends StatelessWidget {
   }
 }
 
-class SignInForm extends StatefulWidget {
+class _SignInForm extends StatefulWidget {
   final Auth auth;
   final ValueChanged<User> onSuccess;
 
-  const SignInForm({
+  const _SignInForm({
     required this.auth,
     required this.onSuccess,
     super.key,
   });
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<_SignInForm> createState() => _SignInFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _SignInFormState extends State<_SignInForm> {
   Future<bool>? _checkSignInFuture;
   final _emailController = TextEditingController(text: "");
   final _passwordController = TextEditingController(text: "");
