@@ -14,6 +14,7 @@ class AppTextFieldBorder extends StatelessWidget {
   final FocusNode? focusNode;
   final bool obscureText;
   final Widget? suffixIcon;
+  final TextInputType? textInputType;
 
   const AppTextFieldBorder({
     Key? key,
@@ -25,10 +26,11 @@ class AppTextFieldBorder extends StatelessWidget {
     this.placeholder = "",
     this.maxLines = 1,
     this.maxLength,
-    this.autofocus = true,
+    this.autofocus = false,
     this.readOnly = false,
     this.textInputAction = TextInputAction.done,
-    this.focusNode
+    this.focusNode,
+    this.textInputType
   }) : super(key: key);
 
   @override
@@ -37,7 +39,7 @@ class AppTextFieldBorder extends StatelessWidget {
       focusNode: focusNode,
       readOnly: readOnly,
       textInputAction: textInputAction,
-      keyboardType: TextInputType.multiline,
+      keyboardType: textInputType,
       autofocus: autofocus,
       maxLines: maxLines,
       maxLength: maxLength,

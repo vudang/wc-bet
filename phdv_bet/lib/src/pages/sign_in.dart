@@ -29,7 +29,7 @@ class SignInPage extends StatelessWidget {
           SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            child: Image.asset(Assets.images.background, fit: BoxFit.fill),
+            child: Image.asset(Assets.images.background, fit: BoxFit.cover),
           ),
           Center(
             child: SignInForm(auth: auth, onSuccess: onSuccess),
@@ -120,7 +120,7 @@ class _SignInFormState extends State<SignInForm> {
           ),
           elevation: 3,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,7 +132,8 @@ class _SignInFormState extends State<SignInForm> {
                 AppTextFieldBorder(
                   controller: _emailController,
                   placeholder: "abc@bet.com",
-                  autofocus: true,
+                  textInputAction: TextInputAction.next,
+                  textInputType: TextInputType.emailAddress
                 ),
                 SizedBox(height: 20),
                 AppText("Password"),
@@ -176,6 +177,10 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   _signInPressed() {
+    if (_emailController.text.trim().isEmpty || _passwordController.text.isEmpty) {
+      _showError(message: "Please enter your email / password to SignIn");
+      return;
+    }
     _signIn();
   }
 
@@ -184,10 +189,11 @@ class _SignInFormState extends State<SignInForm> {
     launchUrl(uri);
   }
 
-  _showError() {
+  _showError({String message = 'Unable to sign in.'}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Unable to sign in.'),
+      SnackBar(
+        backgroundColor: SystemColor.RED,
+        content: AppText(message, size: 17, color: SystemColor.WHITE),
       ),
     );
   }
