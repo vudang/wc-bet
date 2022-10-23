@@ -8,10 +8,25 @@ import 'package:web_dashboard/src/widgets/team_flag.dart';
 
 class MatchListScreen extends StatelessWidget {
   final List<FootballMatch> list;
-  const MatchListScreen({super.key, required this.list});
+  final bool enableHeader;
+  final String? title;
+  const MatchListScreen({
+    super.key,
+    this.enableHeader = false,
+    this.title,
+    required this.list
+  });
 
   @override
   Widget build(BuildContext context) {
+    if (enableHeader) {
+      return Scaffold(
+        appBar: AppBar(
+          title: AppText("${title ?? ""}'s matches", color: SystemColor.WHITE, weight: FontWeight.w700, size: 20,),
+        ),
+        body: _matchList(list),
+      );
+    }
     return _matchList(list);
   }
 

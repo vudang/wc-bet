@@ -6,6 +6,7 @@ part 'team.g.dart';
 class Team {
   Team({
       this.id,
+      this.teamId,
       this.nameEn,
       this.flag,
       this.groups,
@@ -23,6 +24,9 @@ class Team {
 
   @JsonKey(name: "id")
   final String? id;
+
+  @JsonKey(name: "team_id")
+  final String? teamId;
 
   @JsonKey(name: "pts")
   final String? pts;

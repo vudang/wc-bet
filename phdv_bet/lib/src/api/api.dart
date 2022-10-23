@@ -11,6 +11,7 @@ abstract class Api {
 abstract class FootballMatchApi {
   Future<List<FootballMatch>> list();
   Future<FootballMatch?> get(String id);
+  Future<List<FootballMatch>> listForTeam(String teamId);
   Stream<List<FootballMatch>> subscribe();
 }
 

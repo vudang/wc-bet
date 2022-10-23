@@ -22,8 +22,6 @@ class FirebaseFootballMatchApi implements FootballMatchApi {
     final entries = querySnapshot.docs
         .map((doc) => FootballMatch.fromJson(doc.data()))
         .toList();
-
-    entries.sort((a, b) =>  (a.date ?? DateTime.now()).second.compareTo((b.date ?? DateTime.now()).second));
     return entries;
   }
 
@@ -37,6 +35,18 @@ class FirebaseFootballMatchApi implements FootballMatchApi {
     });
 
     return result;
+  }
+  
+  @override
+  Future<List<FootballMatch>> listForTeam(String teamId) async {
+    final querySnapshot = await ref.get();
+    final entries = querySnapshot.docs
+        .map((doc) => FootballMatch.fromJson(doc.data()))
+        .where((team) {
+          return team.awayTeamId == teamId || team.homeTeamId == teamId;
+        })
+        .toList();
+    return entries;
   }
 
 }

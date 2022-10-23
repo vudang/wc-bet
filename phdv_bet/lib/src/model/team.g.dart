@@ -8,6 +8,7 @@ part of 'team.dart';
 
 Team _$TeamFromJson(Map<String, dynamic> json) => Team(
       id: json['id'] as String?,
+      teamId: json['team_id'] as String?,
       nameEn: json['name_en'] as String?,
       flag: json['flag'] as String?,
       groups: json['groups'] as String?,
@@ -27,6 +28,7 @@ Map<String, dynamic> _$TeamToJson(Team instance) {
   writeNotNull('flag', instance.flag);
   writeNotNull('groups', instance.groups);
   writeNotNull('id', instance.id);
+  writeNotNull('team_id', instance.teamId);
   writeNotNull('pts', instance.pts);
   return val;
 }

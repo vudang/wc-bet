@@ -4,7 +4,9 @@ import 'package:web_dashboard/src/app.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/model/standing.dart';
 import 'package:web_dashboard/src/model/team.dart';
+import 'package:web_dashboard/src/pages/match_list_screen.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
+import 'package:web_dashboard/src/widgets/indicator.dart';
 import 'package:web_dashboard/src/widgets/team_flag.dart';
 
 class StandingPage extends StatefulWidget {
@@ -92,17 +94,31 @@ class _StandingPageState extends State<StandingPage> {
   }
   
   Widget _teamRow(Team team) {
-    return Padding(
-      padding: EdgeInsets.only(top: 10),
-      child:  Row(
-        children: [
-          TeamFag(url: team.flag ?? ""),
-          SizedBox(width: 10),
-          AppText(team.nameEn ?? ""),
-          Expanded(child: Container()),
-          AppText("${team.pts ?? "-"}"),
-        ],
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      onTap: () => _showTeamMatch(team),
+      title: Padding(
+        padding: EdgeInsets.only(top: 10),
+        child: Row(
+          children: [
+            TeamFag(url: team.flag ?? ""),
+            SizedBox(width: 10),
+            AppText(team.nameEn ?? ""),
+            Expanded(child: Container()),
+            AppText("${team.pts ?? "-"}"),
+          ],
+        ),
       ),
     );
+  }
+  
+  _showTeamMatch(Team team) async {
+    Indicator.show(context);
+    final matchApi = Provider.of<AppState>(context, listen: false).api!.footballMatchApi;
+    final matches = await matchApi.listForTeam(team.teamId ?? "");
+    Indicator.hide(context);
+
+    Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => MatchListScreen(list: matches, enableHeader: true, title: team.nameEn)));
   }
 }
