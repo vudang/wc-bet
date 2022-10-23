@@ -31,6 +31,11 @@ class Team {
   @JsonKey(name: "pts")
   final String? pts;
 
+  @JsonKey(ignore: true)
+  int get ptsInt {
+    return int.parse(pts ?? "0");
+  }
+
   factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
   Map<String, dynamic> toJson() => _$TeamToJson(this);
 }

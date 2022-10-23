@@ -86,8 +86,10 @@ class _StandingPageState extends State<StandingPage> {
   }
 
   Widget _teams(List<Team>? teams) {
+    final list = teams ?? [];
+    list.sort((a, b) => b.ptsInt.compareTo(a.ptsInt));
     return Column(
-      children: (teams ?? []).map((team) {
+      children: list.map((team) {
         return _teamRow(team);
       }).toList(),
     );

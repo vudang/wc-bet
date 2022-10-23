@@ -9,6 +9,10 @@ class MatchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _matches(context);
+  }
+  
+  Widget _matches(BuildContext context) {
     final appState = Provider.of<AppState>(context);
     return StreamBuilder<List<FootballMatch>>(
       stream: appState.api!.footballMatchApi.subscribe(),
@@ -21,5 +25,9 @@ class MatchScreen extends StatelessWidget {
         return MatchListScreen(list: snapshot.data ?? []);
       },
     );
+  }
+  
+  Widget _searchBar(BuildContext context) {
+    return TextFormField();
   }
 }
