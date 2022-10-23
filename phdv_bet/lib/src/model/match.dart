@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:web_dashboard/src/utils/day_helpers.dart';
 part 'match.g.dart';
 
 @JsonSerializable(includeIfNull: false)
@@ -95,7 +96,11 @@ class FootballMatch {
   final String? awayFlag;
 
 
-  factory FootballMatch.fromJson(Map<String, dynamic> json) => _$MatchFromJson(json);
-  Map<String, dynamic> toJson() => _$MatchToJson(this);
+  factory FootballMatch.fromJson(Map<String, dynamic> json) => _$FootballMatchFromJson(json);
+  Map<String, dynamic> toJson() => _$FootballMatchToJson(this);
 
+  @JsonKey(ignore: true)
+  DateTime? get date {
+    return DateHelper.parseDateTime(input: localDate ?? "");
+  }
 }

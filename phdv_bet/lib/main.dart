@@ -3,12 +3,32 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'src/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (kIsWeb) {
+    await initFirebaseForWeb();
+  } else {
+    await Firebase.initializeApp();
+  }
   runApp(DashboardApp.firebase());
+}
+
+Future<void> initFirebaseForWeb() async {
+  final apiKey = "AIzaSyD58NcI6jfkI47q_PYy0bYvIpLpANLLJZQ";
+  final authDomain = "worldbet-aaa29.firebaseapp.com";
+  final projectId = "worldbet-aaa29";
+  final storageBucket = "worldbet-aaa29.appspot.com";
+  final messagingSenderId = "452255726009";
+  final appId = "1:452255726009:web:17cac3a23bcf944e689e68";
+  await Firebase.initializeApp(options: FirebaseOptions(
+      apiKey: apiKey,
+      appId: appId,
+      messagingSenderId: messagingSenderId,
+      projectId: projectId
+  ));
 }

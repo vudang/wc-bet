@@ -6,7 +6,8 @@ part of 'match.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FootballMatch _$MatchFromJson(Map<String, dynamic> json) => FootballMatch(
+FootballMatch _$FootballMatchFromJson(Map<String, dynamic> json) =>
+    FootballMatch(
       id: json['_id'] as String?,
       awayScore: json['away_score'] as int?,
       awayScorers: (json['away_scorers'] as List<dynamic>?)
@@ -35,7 +36,7 @@ FootballMatch _$MatchFromJson(Map<String, dynamic> json) => FootballMatch(
       awayFlag: json['away_flag'] as String?,
     );
 
-Map<String, dynamic> _$MatchToJson(FootballMatch instance) {
+Map<String, dynamic> _$FootballMatchToJson(FootballMatch instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {

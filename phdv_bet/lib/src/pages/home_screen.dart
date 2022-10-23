@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/src/color.dart';
+import 'package:web_dashboard/src/pages/standing_sceen.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import '../widgets/third_party/adaptive_scaffold.dart';
 import 'match_screen.dart';
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       destinations: const [
         AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
         AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
-        AdaptiveScaffoldDestination(title: 'Settings', icon: Icons.settings),
+        AdaptiveScaffoldDestination(title: 'Info', icon: Icons.info)
       ],
       body: _pageAtIndex(_pageIndex),
       onNavigationIndexChange: (newIndex) {
@@ -84,9 +85,13 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (index == 1) {
-      return const Center(child: Text('Ranking page'));
+      return const Center(child: Text('Ranking Page'));
     }
 
-    return const Center(child: Text('Settings page'));
+    if (index == 2) {
+      return const StandingPage();
+    }
+
+    return const Center(child: Text('Settings'));
   }
 }

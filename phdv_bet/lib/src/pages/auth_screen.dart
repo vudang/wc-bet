@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as FirebaseAuthen;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web_dashboard/src/auth/firebase.dart';
@@ -104,7 +105,10 @@ class _SignInFormState extends State<_SignInForm> {
           _showError();
         }
 
-        return _loginForm();
+        return Container(
+          width: kIsWeb ? 430 : null,
+          child: _loginForm(),
+        );
       },
     );
   }
@@ -155,12 +159,13 @@ class _SignInFormState extends State<_SignInForm> {
                   size: AppButtonSize.huge,
                   onPressed: () => _signInPressed()
                 ),
+                SizedBox(height: 10),
                 Align(
                   alignment: Alignment.center,
                   child: TextButton(
                       onPressed: () => _contactUsPressed(),
                       child: AppText(
-                        "Contact Us",
+                        "Register",
                         size: 15,
                         color: SystemColor.GREY,
                         weight: FontWeight.w600,
