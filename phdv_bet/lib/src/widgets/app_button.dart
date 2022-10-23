@@ -109,6 +109,7 @@ class AppSystemRegularButton extends StatefulWidget {
   final double? verticalPadding;
   final Color? customTextColor;
   final Color? customDisableColor;
+  final Color? customColor;
   final double? width;
   final bool disableAfterPressed; // Button will be animate to disable state after pressed on
 
@@ -123,6 +124,7 @@ class AppSystemRegularButton extends StatefulWidget {
     this.customDisableColor,
     this.disableAfterPressed = false,
     this.width,
+    this.customColor,
     this.size = AppButtonSize.large,
     this.style = AppButtonStyle.purple,
     this.state = AppButtonState.normal,
@@ -209,7 +211,7 @@ class _AppSystemRegularButtonState extends State<AppSystemRegularButton> with Si
         return DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: enable ? _colorAnimation.value : disableColor,
+            color: enable ? (widget.customColor != null ? widget.customColor : _colorAnimation.value) : disableColor,
           ),
           child: _childWidget()
         );

@@ -7,6 +7,8 @@ class Odd {
       this.amount,
       this.fullMatch,
       this.matchId,
+      this.teamAway,
+      this.teamHome
   });
 
   @JsonKey(name: "amount")
@@ -18,8 +20,50 @@ class Odd {
   @JsonKey(name: "matchId")
   final int? matchId;
 
+  @JsonKey(name: "teamAway")
+  final String? teamAway;
+
+
+  @JsonKey(name: "teamHome")
+  final String? teamHome;
+
   factory Odd.fromJson(Map<String, dynamic> json) => _$OddFromJson(json);
   Map<String, dynamic> toJson() => _$OddToJson(this);
+
+
+  @JsonKey(ignore: true)
+  String? get label {
+    final label = fullMatch?.asianHandicap?.first.label;
+    return label;
+  }
+
+  @JsonKey(ignore: true)
+  String? get homePrefix {
+    final prefix = fullMatch?.asianHandicap?.first.prefix;
+    return prefix;
+  }
+
+  @JsonKey(ignore: true)
+  String? get awayPrefix {
+    final prefix = fullMatch?.asianHandicap?.first.prefix;
+    return prefix == "+" ? "-" : "+";
+  }
+
+  @JsonKey(ignore: true)
+  String? get desciption {
+    final label = fullMatch?.asianHandicap?.first.label;
+    final prefix = fullMatch?.asianHandicap?.first.prefix;
+    if (label == "0") {
+      return "Đồng banh, kẻ tám lạng người nửa kilogram :D";
+    }
+
+    if (prefix == "-") {
+      return "Đội $teamHome chấp đội $teamAway $label quả";
+    }
+
+    return "Đội $teamAway chấp đội $teamHome $label quả";
+  }
+
 }
 
 @JsonSerializable(includeIfNull: false)
@@ -56,6 +100,16 @@ class AsianHandicap {
 
   @JsonKey(name: "prefix")
   final String? prefix;
+
+  @JsonKey(ignore: true)
+  String? get homePrefix {
+    return prefix;
+  }
+
+  @JsonKey(ignore: true)
+  String? get awayPrefix {
+    return prefix == "+" ? "-" : "+";
+  }
 
   factory AsianHandicap.fromJson(Map<String, dynamic> json) => _$AsianHandicapFromJson(json);
   Map<String, dynamic> toJson() => _$AsianHandicapToJson(this);

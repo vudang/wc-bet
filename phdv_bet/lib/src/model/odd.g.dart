@@ -12,6 +12,8 @@ Odd _$OddFromJson(Map<String, dynamic> json) => Odd(
           ? null
           : FullMatch.fromJson(json['fullMatch'] as Map<String, dynamic>),
       matchId: json['matchId'] as int?,
+      teamAway: json['teamAway'] as String?,
+      teamHome: json['teamHome'] as String?,
     );
 
 Map<String, dynamic> _$OddToJson(Odd instance) {
@@ -26,6 +28,8 @@ Map<String, dynamic> _$OddToJson(Odd instance) {
   writeNotNull('amount', instance.amount);
   writeNotNull('fullMatch', instance.fullMatch);
   writeNotNull('matchId', instance.matchId);
+  writeNotNull('teamAway', instance.teamAway);
+  writeNotNull('teamHome', instance.teamHome);
   return val;
 }
 
