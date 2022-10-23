@@ -17,11 +17,10 @@ class FirebaseStandingApi implements StandingApi {
 
   @override
   Future<List<Standing>> list() async {
-    // final querySnapshot = await ref.get();
-    // return querySnapshot.docs
-    //     .map((doc) => Standing.fromJson(doc.data()))
-    //     .toList();
-    return [];
+    final querySnapshot = await ref.get();
+    return querySnapshot.docs
+        .map((doc) => Standing.fromJson(doc.data()))
+        .toList();
   }
 
   @override

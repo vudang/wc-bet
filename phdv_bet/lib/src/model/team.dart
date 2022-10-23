@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:web_dashboard/src/utils/day_helpers.dart';
 part 'team.g.dart';
 
 @JsonSerializable(includeIfNull: false)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/pages/match_list_screen.dart';
+import 'package:web_dashboard/src/pages/odd_screen.dart';
 import '../app.dart';
 
 class MatchScreen extends StatelessWidget {
@@ -16,18 +17,22 @@ class MatchScreen extends StatelessWidget {
     final appState = Provider.of<AppState>(context);
     return StreamBuilder<List<FootballMatch>>(
       stream: appState.api!.footballMatchApi.subscribe(),
-      builder: (context, snapshot) {
+      builder: (ctx, snapshot) {
         if (snapshot.data == null) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        return MatchListScreen(list: snapshot.data ?? []);
+        return MatchListScreen(
+          list: snapshot.data ?? [],
+          onSelected: (match) => _selectedMatch(match, context),
+        );
       },
     );
   }
   
-  Widget _searchBar(BuildContext context) {
-    return TextFormField();
+  _selectedMatch(FootballMatch match, BuildContext context) {
+    Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => OddScreen(match: match)));
   }
 }

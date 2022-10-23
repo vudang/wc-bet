@@ -1,10 +1,14 @@
+import 'package:web_dashboard/src/model/config.dart';
 import 'package:web_dashboard/src/model/match.dart';
+import 'package:web_dashboard/src/model/odd.dart';
 import 'package:web_dashboard/src/model/standing.dart';
 
 /// Manipulates app data,
 abstract class Api {
   FootballMatchApi get footballMatchApi;
   StandingApi get standingApi;
+  OddApi get oddApi;
+  ConfigApi get configApi;
 }
 
 /// Match
@@ -21,4 +25,14 @@ abstract class StandingApi {
   Future<List<Standing>> list();
   Future<Standing?> get(String id);
   Stream<List<Standing>> subscribe();
+}
+
+/// Odd
+abstract class OddApi {
+  Future<Odd?> get({required int matchId});
+}
+
+/// Config
+abstract class ConfigApi {
+  Future<Config?> get();
 }
