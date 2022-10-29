@@ -8,7 +8,8 @@ class Odd {
       this.fullMatch,
       this.matchId,
       this.teamAway,
-      this.teamHome
+      this.teamHome,
+      this.isLock
   });
 
   @JsonKey(name: "amount")
@@ -23,9 +24,11 @@ class Odd {
   @JsonKey(name: "teamAway")
   final String? teamAway;
 
-
   @JsonKey(name: "teamHome")
   final String? teamHome;
+
+  @JsonKey(name: "lock")
+  final bool? isLock;
 
   factory Odd.fromJson(Map<String, dynamic> json) => _$OddFromJson(json);
   Map<String, dynamic> toJson() => _$OddToJson(this);

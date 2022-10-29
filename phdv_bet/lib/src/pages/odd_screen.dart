@@ -175,6 +175,8 @@ class OddScreen extends StatelessWidget {
               SizedBox(height: 20),
               AppText("${odds.desciption ?? ""}",
                   fontStyle: FontStyle.italic, color: SystemColor.GREY_LIGHT),
+              SizedBox(height: 5),
+              _myBetInfo()
             ]),
           ),
         );
@@ -188,13 +190,25 @@ class OddScreen extends StatelessWidget {
       stream: _betApi?.getMyBet(odds.matchId!),
       builder: (ctx, snapshots) {
         final alreadyBet = snapshots.data != null;
-        final color = alreadyBet == false ? SystemColor.RED : SystemColor.GREY_LIGHT.withAlpha(20);
-        final txtcolor = alreadyBet == false
+        final isExpired = odds.isLock == true;
+        final canBet = alreadyBet == false && isExpired == false;
+        var color = canBet ? SystemColor.RED : SystemColor.GREY_LIGHT.withAlpha(20);
+        final txtcolor = canBet
               ? SystemColor.WHITE
               : SystemColor.BLACK;
+        if (alreadyBet) {
+          final isBetHome = snapshots.data?.teamChoosed.isHome == true;
+          if (isBetHome && isHome) {
+            color = SystemColor.RED.withOpacity(0.2);
+          }
+          if (!isBetHome && !isHome) {
+            color = SystemColor.RED.withOpacity(0.2);
+          }
+        }
+
         return Expanded(
           child: GestureDetector(
-            onTap: () => alreadyBet ? null : _selectedOdds(odds, isHome, context),
+            onTap: () => canBet == false ? null : _selectedOdds(odds, isHome, context),
             child: Container(
               height: 60,
               decoration: BoxDecoration(
@@ -209,6 +223,22 @@ class OddScreen extends StatelessWidget {
         );
       }
     );
+  }
+
+
+  Widget _myBetInfo() {
+    return StreamBuilder<Bet?>(
+        stream: _betApi?.getMyBet(match.matchId!),
+        builder: (ctx, snapshots) {
+          final alreadyBet = snapshots.data != null;
+          final isHome = snapshots.data?.teamChoosed.isHome == true;
+          final teamName = isHome ? match.homeTeamEn : match.awayTeamEn;
+          
+          return Visibility(
+            visible: alreadyBet,
+            child: AppText("You was bet '$teamName'", color: SystemColor.RED.withOpacity(0.6)),
+          );
+        });
   }
 
   Widget _referenceBet() {
