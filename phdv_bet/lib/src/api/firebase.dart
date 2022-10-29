@@ -4,6 +4,7 @@ import 'package:web_dashboard/src/api/firebase_config.dart';
 import 'package:web_dashboard/src/api/firebase_match.dart';
 import 'package:web_dashboard/src/api/firebase_odd.dart';
 import 'package:web_dashboard/src/api/firebase_standing.dart';
+import 'package:web_dashboard/src/api/firebase_user.dart';
 
 import 'api.dart';
 
@@ -23,10 +24,14 @@ class FirebaseApi implements Api {
   @override
   final BetApi betApi;
 
+  @override
+  final UserApi userApi;
+
   FirebaseApi(FirebaseFirestore firestore, String userId) :
    footballMatchApi = FirebaseFootballMatchApi(firestore),
         standingApi = FirebaseStandingApi(firestore),
              oddApi = FirebaseOddApi(firestore),
           configApi = FirebaseConfigApi(firestore),
-             betApi = FirebaseBetApi(firestore);
+             betApi = FirebaseBetApi(firestore),
+            userApi = FirebaseUserApi(firestore);
 }

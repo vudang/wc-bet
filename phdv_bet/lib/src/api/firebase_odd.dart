@@ -8,7 +8,6 @@ class FirebaseOddApi implements OddApi {
 
   FirebaseOddApi(this.fireStore) : ref = fireStore.collection('odds');
 
-
   @override
   Future<Odd?> get({required int matchId}) async {
     final querySnapshot = await ref.where("matchId", isEqualTo: matchId).get();

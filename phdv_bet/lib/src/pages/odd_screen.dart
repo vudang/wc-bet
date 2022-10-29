@@ -10,6 +10,7 @@ import 'package:web_dashboard/src/model/config.dart';
 import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/model/odd.dart';
 import 'package:web_dashboard/src/model/team.dart';
+import 'package:web_dashboard/src/pages/bet_reference_screen.dart';
 import 'package:web_dashboard/src/widgets/app_confirm_popup.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/congratulations.dart';
@@ -305,11 +306,21 @@ class OddScreen extends StatelessWidget {
   }
   
   _selectedHomeRef() {
-    
+    showCupertinoModalPopup(
+        context: _context,
+        barrierColor: SystemColor.BLACK.withOpacity(0.8),
+        builder: (_) {
+          return BetReferenceScreen(match: match, chooseHome: true);
+        });
   }
 
   _selectedAwayRef() {
-
+    showCupertinoModalPopup(
+        context: _context,
+        barrierColor: SystemColor.BLACK.withOpacity(0.8),
+        builder: (_) {
+          return BetReferenceScreen(match: match, chooseHome: false);
+        });
   }
 
   _placeBet(TeamType teamType) async {

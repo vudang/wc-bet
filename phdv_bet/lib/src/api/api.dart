@@ -3,6 +3,7 @@ import 'package:web_dashboard/src/model/config.dart';
 import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/model/odd.dart';
 import 'package:web_dashboard/src/model/standing.dart';
+import 'package:web_dashboard/src/model/user.dart';
 
 /// Manipulates app data,
 abstract class Api {
@@ -11,11 +12,20 @@ abstract class Api {
   OddApi get oddApi;
   ConfigApi get configApi;
   BetApi get betApi;
+  UserApi get userApi;
 }
+
+/// User
+abstract class UserApi {
+  Future<List<User>> list();
+  Future<User?> get(String userId);
+}
+
 
 /// Bat
 abstract class BetApi {
   Stream<List<Bet>> subscribe();
+  Stream<List<Bet>> getListBetForMatch(int matchId);
   Stream<Bet?> getMyBet(int matchId);
   Future<void> placeBet(Bet bet);
 }
