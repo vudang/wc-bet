@@ -1,22 +1,36 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_dashboard/src/api/api.dart';
 import 'package:web_dashboard/src/color.dart';
+import 'package:web_dashboard/src/model/bet.dart';
 import 'package:web_dashboard/src/model/config.dart';
 import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/model/odd.dart';
+import 'package:web_dashboard/src/model/team.dart';
 import 'package:web_dashboard/src/widgets/app_confirm_popup.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
+import 'package:web_dashboard/src/widgets/congratulations.dart';
+import 'package:web_dashboard/src/widgets/indicator.dart';
 import 'package:web_dashboard/src/widgets/team_flag.dart';
 import '../app.dart';
 
 class OddScreen extends StatelessWidget {
   final FootballMatch match;
-  const OddScreen({super.key, required this.match});
+  BetApi? _betApi;
+  OddApi? _oddApi;
+  Odd? _odd;
+  late BuildContext _context;
+
+  OddScreen({super.key, required this.match});
 
   @override
   Widget build(BuildContext context) {
+    _context = context;
+    _betApi = Provider.of<AppState>(context).api?.betApi;
+    _oddApi = Provider.of<AppState>(context).api?.oddApi;
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -133,10 +147,8 @@ class OddScreen extends StatelessWidget {
   }
 
   Widget _odds(BuildContext context) {
-    final appState = Provider.of<AppState>(context);
-    final api = appState.api!.oddApi;
     return StreamBuilder<Odd?>(
-      stream: api.get(matchId: match.matchId ?? 0).asStream(),
+      stream: _oddApi?.get(matchId: match.matchId ?? 0).asStream(),
       builder: (context, snapshot) {
         final odds = snapshot.data;
         if (odds == null) {
@@ -144,6 +156,8 @@ class OddScreen extends StatelessWidget {
             child: AppText("Odd for this match is comming soon !!!"),
           );
         }
+
+        _odd = odds;
 
         return Card(
           child: Padding(
@@ -170,20 +184,30 @@ class OddScreen extends StatelessWidget {
 
   Widget _oddsItemView(Odd odds, bool isHome, BuildContext context) {
     final text = isHome ? odds.homePrefix : odds.awayPrefix;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => _selectedOdds(odds, isHome, context),
-        child: Container(
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: SystemColor.BLACK.withAlpha(20),
+    return StreamBuilder<Bet?>(
+      stream: _betApi?.getMyBet(odds.matchId!),
+      builder: (ctx, snapshots) {
+        final alreadyBet = snapshots.data != null;
+        final color = alreadyBet == false ? SystemColor.RED : SystemColor.GREY_LIGHT.withAlpha(20);
+        final txtcolor = alreadyBet == false
+              ? SystemColor.WHITE
+              : SystemColor.BLACK;
+        return Expanded(
+          child: GestureDetector(
+            onTap: () => alreadyBet ? null : _selectedOdds(odds, isHome, context),
+            child: Container(
+              height: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: color,
+              ),
+              child: Center(
+                  child: AppText("${text ?? ""} ${odds.label ?? ""}",
+                      size: 20, weight: FontWeight.bold, color: txtcolor)),
+            )
           ),
-          child: Center(
-              child: AppText("${text ?? ""} ${odds.label ?? ""}",
-                  size: 20, weight: FontWeight.bold)),
-        )
-      ),
+        );
+      }
     );
   }
 
@@ -238,15 +262,49 @@ class OddScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
           onPositivePressed: () {
-            // TODO: BET
             Navigator.of(context).pop();
+            if (isHome) {
+              _placeBet(TeamType.home());
+            } else {
+              _placeBet(TeamType.away());
+            }
           },
         );
       }
     );
   }
   
-  _selectedHomeRef() {}
+  _selectedHomeRef() {
+    
+  }
 
-  _selectedAwayRef() {}
+  _selectedAwayRef() {
+
+  }
+
+  _placeBet(TeamType teamType) async {
+    if (_odd == null) {
+      return;
+    }
+
+    Indicator.show(_context);
+    await _betApi?.placeBet(Bet(
+      amount: _odd?.amount,
+      choosedTeam: teamType.type,
+      userId: FirebaseAuth.instance.currentUser?.uid,
+      matchId: _odd?.matchId
+    ));
+    Indicator.hide(_context);
+    _showBetSuccessful();
+  }
+
+  _showBetSuccessful() {
+      showCupertinoModalPopup(
+        context: _context,
+        builder: (ctx) {
+          return Congratulations(completed: () {
+            Navigator.of(ctx).pop();
+          });
+      });
+  }
 }

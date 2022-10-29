@@ -7,6 +7,8 @@ class Assets {
 class AppAnimations {
   static const String root = "assets/animations";
   final String indicator = "$root/indicator.json";
+  final String football = "$root/football.json";
+  final String congratulation = "$root/congratulation.json";
 }
 
 class AppIcons {

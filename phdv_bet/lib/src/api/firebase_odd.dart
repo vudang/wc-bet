@@ -11,12 +11,11 @@ class FirebaseOddApi implements OddApi {
 
   @override
   Future<Odd?> get({required int matchId}) async {
-    // final querySnapshot = await ref.get();
-    // return querySnapshot.docs
-    //     .map((doc) => Odd.fromJson(doc.data()))
-    //     .firstWhere((element) => element.matchIdToString.toLowerCase() == matchId.toLowerCase());
-
     final querySnapshot = await ref.where("matchId", isEqualTo: matchId).get();
-    return querySnapshot.docs.map((doc) => Odd.fromJson(doc.data())).first;
+    final odds = querySnapshot.docs.map((doc) => Odd.fromJson(doc.data()));
+    if (odds.isNotEmpty) {
+      return odds.first;
+    }
+    return null;
   }
 }

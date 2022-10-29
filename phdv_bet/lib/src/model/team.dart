@@ -1,6 +1,30 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'team.g.dart';
 
+class TeamType {
+  static const String HOME = "home";
+  static const String AWAY = "away";
+  final String type;
+
+  TeamType(this.type);
+  
+  static TeamType home() {
+    return TeamType(HOME);
+  }
+
+  static TeamType away() {
+    return TeamType(AWAY);
+  }
+
+  bool get isHome {
+    return type == HOME;
+  }
+
+  bool get isAway {
+    return type == AWAY;
+  }
+}
+
 @JsonSerializable(includeIfNull: false)
 class Team {
   Team({

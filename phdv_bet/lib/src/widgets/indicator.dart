@@ -35,7 +35,7 @@ class AppIndicator extends StatelessWidget {
       child: Align(
           alignment: Alignment.center,
           child: Lottie.asset(
-            Assets.animations.indicator,
+            Assets.animations.football,
             repeat: true,
             reverse: true,
             width: 150,

@@ -68,6 +68,7 @@ class AppConfirmPopup extends StatelessWidget {
     return AppSystemRegularButton(
       text: positiveButton,
       onPressed: onPositivePressed,
+      customColor: SystemColor.RED,
     );
   }
 

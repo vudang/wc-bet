@@ -1,3 +1,4 @@
+import 'package:web_dashboard/src/model/bet.dart';
 import 'package:web_dashboard/src/model/config.dart';
 import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/model/odd.dart';
@@ -9,6 +10,14 @@ abstract class Api {
   StandingApi get standingApi;
   OddApi get oddApi;
   ConfigApi get configApi;
+  BetApi get betApi;
+}
+
+/// Bat
+abstract class BetApi {
+  Stream<List<Bet>> subscribe();
+  Stream<Bet?> getMyBet(int matchId);
+  Future<void> placeBet(Bet bet);
 }
 
 /// Match
