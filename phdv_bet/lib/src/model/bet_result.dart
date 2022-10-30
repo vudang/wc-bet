@@ -23,11 +23,6 @@ class UserBet {
 
   UserBet(this.user, this.bets) {
     int total = user.amount ?? 0;
-    int totalLoose = bets.where((element) => element.isLoose).length;
-    if (user.userId == "kRkzjqQD2FvXCMvhb7rp2BMeLGWD") {
-      print("Bet of user loosed: ${totalLoose}");
-    }
-    
     bets.forEach((bet) {
       if (bet.isLoose) {
         total -= bet.bet.amount ?? 0;

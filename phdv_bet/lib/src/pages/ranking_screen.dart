@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +25,7 @@ class _RankingScreenState extends State<RankingScreen> {
   OddApi? _oddApi;
   UserApi? _userApi;
   FootballMatchApi? _matchApi;
-  List<UserBet>? _listRanking;
+  StreamController<List<UserBet>> _rankingStream = StreamController();
 
   _fetchData() async {
     final api = Provider.of<AppState>(context, listen: false).api;
@@ -54,9 +56,7 @@ class _RankingScreenState extends State<RankingScreen> {
     }).toList();
     
     ranking?.sort((a, b) => b.availableScore.compareTo(a.availableScore));
-    setState(() {
-      _listRanking = ranking;
-    });
+    _rankingStream.add(ranking ?? []);
   }
 
   /// Lấy kết quả bet của tất cả các trận đã đá của user
@@ -100,18 +100,24 @@ class _RankingScreenState extends State<RankingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if ((_listRanking ?? []).isEmpty) {
-      return _emptyView();
-    }
-    return _contentView();
+    return StreamBuilder<List<UserBet>>(
+      stream: _rankingStream.stream,
+      builder: (ctx, snapshot) {
+        final listRanking = snapshot.data ?? [];
+        if (listRanking.isEmpty) {
+          return _emptyView();
+        }
+        return _contentView(listRanking);
+      }
+    );
   }
 
-  Widget _contentView() {
+  Widget _contentView(List<UserBet> listRanking) {
     return ListView.separated(
       separatorBuilder: (ctx, index) => Divider(),
-      itemCount: _listRanking?.length ?? 0,
+      itemCount: listRanking?.length ?? 0,
       itemBuilder: (ctx, index) {
-        final ranking = _listRanking?[index];
+        final ranking = listRanking?[index];
         return _rankingRow(ranking, index);
       }, 
     );
