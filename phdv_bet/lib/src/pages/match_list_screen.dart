@@ -74,7 +74,13 @@ class MatchListScreen extends StatelessWidget {
                 children: [
                   _homeTeam(match),
                   SizedBox(width: 10),
-                  AppText("VS", weight: FontWeight.w500, size: 20),
+                  Visibility(
+                    visible: match.finished == false,
+                    child: AppText("VS", weight: FontWeight.w500, size: 20)
+                  ),
+                  Visibility(
+                      visible: match.finished == true,
+                      child: AppText("${match.homeScore} : ${match.awayScore}", weight: FontWeight.w500, size: 20)),
                   SizedBox(width: 10),
                   _awayTeam(match)
                 ],
@@ -108,7 +114,8 @@ class MatchListScreen extends StatelessWidget {
         children: [
           TeamFag(url: match.awayFlag ?? ""),
           SizedBox(width: 10),
-          AppText(match.awayTeamEn ?? "", size: 18, color: SystemColor.BLACK, weight: FontWeight.w500),
+          AppText(match.awayTeamEn ?? "",
+              size: 18, color: SystemColor.BLACK, weight: FontWeight.w500),
         ],
       ),
     );

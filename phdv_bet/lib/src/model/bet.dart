@@ -51,9 +51,6 @@ class Bet {
       result = totalHomeScore <= totalAwayScore ? BetResulttype.win : BetResulttype.lose;
     }
 
-    if (userId == "kRkzjqQD2FvXCMvhb7rp2BMeLGWD") {
-      print("Bet of user result: ${result}");
-    }
     return result;
   }
 }

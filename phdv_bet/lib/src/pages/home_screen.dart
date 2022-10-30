@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
 
   static Widget _pageAtIndex(int index) {
     if (index == 0) {
-      return const MatchScreen();
+      return MatchScreen();
     }
 
     if (index == 1) {
