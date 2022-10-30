@@ -17,4 +17,18 @@ class FirebaseOddApi implements OddApi {
     }
     return null;
   }
+
+
+  @override
+  Future<List<Odd>> list({bool isFillterLocked = true}) async {
+    Query<Map<String, dynamic>> api = ref;
+    if (isFillterLocked) {
+      api = ref.where("lock", isEqualTo: true);
+    }
+    final querySnapshot = await api.get();
+    final entries = querySnapshot.docs
+        .map((doc) => Odd.fromJson(doc.data()))
+        .toList();
+    return entries;
+  }
 }

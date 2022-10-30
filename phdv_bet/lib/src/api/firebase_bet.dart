@@ -50,6 +50,12 @@ class FirebaseBetApi implements BetApi {
       }).toList();
     });
     return result;
+  }
 
+  @override
+  Future<List<Bet>> list() async {
+    final querySnapshot = await ref.get();
+    final entries = querySnapshot.docs.map((doc) => Bet.fromJson(doc.data())).toList();
+    return entries;
   }
 }

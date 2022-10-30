@@ -26,6 +26,15 @@ class FirebaseFootballMatchApi implements FootballMatchApi {
   }
 
   @override
+  Future<List<FootballMatch>> listFinished() async {
+    final querySnapshot = await ref.where("finished", isEqualTo: true).get();
+    final entries = querySnapshot.docs
+        .map((doc) => FootballMatch.fromJson(doc.data()))
+        .toList();
+    return entries;
+  }
+
+  @override
   Stream<List<FootballMatch>> subscribe() {
     var snapshots = ref.snapshots();
     var result = snapshots.map<List<FootballMatch>>((querySnapshot) {

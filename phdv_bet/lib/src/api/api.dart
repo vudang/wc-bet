@@ -24,6 +24,7 @@ abstract class UserApi {
 
 /// Bat
 abstract class BetApi {
+  Future<List<Bet>> list();
   Stream<List<Bet>> subscribe();
   Stream<List<Bet>> getListBetForMatch(int matchId);
   Stream<Bet?> getMyBet(int matchId);
@@ -33,6 +34,7 @@ abstract class BetApi {
 /// Match
 abstract class FootballMatchApi {
   Future<List<FootballMatch>> list();
+  Future<List<FootballMatch>> listFinished();
   Future<FootballMatch?> get(String id);
   Future<List<FootballMatch>> listForTeam(String teamId);
   Stream<List<FootballMatch>> subscribe();
@@ -48,6 +50,7 @@ abstract class StandingApi {
 
 /// Odd
 abstract class OddApi {
+  Future<List<Odd>> list({bool isFillterLocked = true});
   Future<Odd?> get({required int matchId});
 }
 

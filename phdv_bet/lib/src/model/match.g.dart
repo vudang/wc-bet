@@ -14,7 +14,7 @@ FootballMatch _$FootballMatchFromJson(Map<String, dynamic> json) =>
           ?.map((e) => e as String)
           .toList(),
       awayTeamId: json['away_team_id'] as String?,
-      finished: json['finished'] as String?,
+      finished: json['finished'] as bool?,
       group: json['group'] as String?,
       homeScore: json['home_score'] as int?,
       homeScorers: (json['home_scorers'] as List<dynamic>?)

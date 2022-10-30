@@ -42,7 +42,7 @@ class FootballMatch {
   final String? awayTeamId;
 
   @JsonKey(name: "finished")
-  final String? finished;
+  final bool? finished;
 
   @JsonKey(name: "group")
   final String? group;
