@@ -9,6 +9,7 @@ import 'package:web_dashboard/src/app.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/model/user.dart';
 import 'package:web_dashboard/src/pages/user_bet_screen.dart';
+import 'package:web_dashboard/src/utils/bet_helper.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 
 import '../assets.dart';
@@ -49,7 +50,7 @@ class _RankingScreenState extends State<RankingScreen> {
     final allOddsLocked = await _oddApi?.list(isFillterLocked: true);
 
     final ranking = allUser?.map((user) {
-      final userBet = _getUserBetData(
+      final userBet = BetHelper.getUserBetData(
         user: user, 
         bets: allBets ?? [], 
         matchs: allMatchFinished ?? [], 
@@ -60,40 +61,6 @@ class _RankingScreenState extends State<RankingScreen> {
     
     ranking?.sort((a, b) => b.availableScore.compareTo(a.availableScore));
     _rankingStream.add(ranking ?? []);
-  }
-
-  /// Lấy kết quả bet của tất cả các trận đã đá của user
-  UserBet _getUserBetData(
-      {required User user,
-      required List<Bet> bets,
-      required List<FootballMatch> matchs,
-      required List<Odd> odds}) {
-    
-    /// Trong tất cả các trận đã đá, lấy danh sách các trận đã đặt cược của người chơi
-    final List<Bet> userBets = matchs.map((m) {
-      final bet = bets.firstWhere(
-          (b) => b.matchId == m.matchId && b.userId == user.userId,
-          orElse: () => Bet());
-      return bet;
-    }).toList();
-
-    /// Kiểm tra kết qủa bet
-    final List<BetResult> userBetsResult = odds.map((odd) {
-      final bet = userBets.firstWhere((b) => b.matchId == odd.matchId, orElse: () => Bet());
-      final match = matchs.firstWhere((m) => m.matchId == odd.matchId, orElse: () => FootballMatch());
-      if (bet.matchId != null) {
-        final BetResulttype type = bet.betResult(odd, match);
-        final result = BetResult(bet, type);
-        return result;
-      } else {
-        /// Không BET mặc định là thua
-        final looseBet = Bet(amount: odd.amount, matchId: odd.matchId, userId: user.userId);
-        final result = BetResult(looseBet, BetResulttype.lose);
-        return result;
-      }
-    }).toList();
-
-    return UserBet(user, userBetsResult);
   }
 
   @override
