@@ -1,0 +1,179 @@
+import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:web_dashboard/src/api/api.dart';
+import 'package:web_dashboard/src/app.dart';
+import 'package:web_dashboard/src/color.dart';
+import 'package:web_dashboard/src/model/user.dart';
+import 'package:web_dashboard/src/widgets/app_text.dart';
+
+import '../assets.dart';
+import '../model/bet.dart';
+import '../model/match.dart';
+import '../model/odd.dart';
+import '../model/bet_result.dart';
+
+class RankingScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _RankingScreenState();
+}
+
+class _RankingScreenState extends State<RankingScreen> {
+  BetApi? _betApi;
+  OddApi? _oddApi;
+  UserApi? _userApi;
+  FootballMatchApi? _matchApi;
+  List<UserBet>? _listRanking;
+
+  _fetchData() async {
+    final api = Provider.of<AppState>(context, listen: false).api;
+    _userApi = api?.userApi;
+    _betApi = api?.betApi;
+    _oddApi = api?.oddApi;
+    _matchApi = api?.footballMatchApi;
+
+    final allUser = await _userApi?.list();
+
+    /// Tất cả bet của người chơi
+    final allBets = await _betApi?.list();
+
+    /// Danh sach trận đã kết thúc
+    final allMatchFinished = await _matchApi?.listFinished();
+
+    /// Danh sách kèo đã khoá không cho bet nữa
+    final allOddsLocked = await _oddApi?.list(isFillterLocked: true);
+
+    final ranking = allUser?.map((user) {
+      final userBet = _getUserBetData(
+        user: user, 
+        bets: allBets ?? [], 
+        matchs: allMatchFinished ?? [], 
+        odds: allOddsLocked ?? []
+      );
+      return userBet;
+    }).toList();
+    
+    ranking?.sort((a, b) => b.availableScore.compareTo(a.availableScore));
+    setState(() {
+      _listRanking = ranking;
+    });
+  }
+
+  /// Lấy kết quả bet của tất cả các trận đã đá của user
+  UserBet _getUserBetData(
+      {required User user,
+      required List<Bet> bets,
+      required List<FootballMatch> matchs,
+      required List<Odd> odds}) {
+    
+    /// Trong tất cả các trận đã đá, lấy danh sách các trận đã đặt cược của người chơi
+    final List<Bet> userBets = matchs.map((m) {
+      final bet = bets.firstWhere(
+          (b) => b.matchId == m.matchId && b.userId == user.userId,
+          orElse: () => Bet());
+      return bet;
+    }).toList();
+
+    /// Kiểm tra kết qủa bet
+    final List<BetResult> userBetsResult = odds.map((odd) {
+      final bet = userBets.firstWhere((b) => b.matchId == odd.matchId, orElse: () => Bet());
+      final match = matchs.firstWhere((m) => m.matchId == odd.matchId, orElse: () => FootballMatch());
+      if (bet.matchId != null) {
+        final BetResulttype type = bet.betResult(odd, match);
+        final result = BetResult(bet, type);
+        return result;
+      } else {
+        /// Không BET mặc định là thua
+        final result = BetResult(bet, BetResulttype.lose);
+        return result;
+      }
+    }).toList();
+
+    return UserBet(user, userBetsResult);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(milliseconds: 300), () => _fetchData());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if ((_listRanking ?? []).isEmpty) {
+      return _emptyView();
+    }
+    return _contentView();
+  }
+
+  Widget _contentView() {
+    return ListView.separated(
+      separatorBuilder: (ctx, index) => Divider(),
+      itemCount: _listRanking?.length ?? 0,
+      itemBuilder: (ctx, index) {
+        final ranking = _listRanking?[index];
+        return _rankingRow(ranking, index);
+      }, 
+    );
+  }
+  
+  Widget _rankingRow(UserBet? ranking, int index) {
+    return ListTile(
+      leading: _ranking(index),
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppText("${ranking?.user.displayName}", weight: FontWeight.w700),
+          AppText("Points: ${ranking?.availableScore}", weight: FontWeight.w500, color: SystemColor.RED, size: 15)
+        ],
+      ),
+    );
+  }
+
+  Widget _ranking(int index) {
+    if (index == 0) {
+      return Image.asset(Assets.icons.ic_gold, width: 40, height: 40);
+    }
+    if (index == 1) {
+      return Image.asset(Assets.icons.ic_siliver, width: 40, height: 40);
+    }
+    if (index == 2) {
+      return Image.asset(Assets.icons.ic_bronze, width: 40, height: 40);
+    }
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        color: SystemColor.GREY_LIGHT.withOpacity(0.2)
+      ),
+      child: Align(
+        alignment: Alignment.center,
+        child: AppText(
+          "${index + 1}",
+          size: 20,
+          weight: FontWeight.bold,
+          align: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _emptyView() {
+    return Align(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 100),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Lottie.asset(
+              Assets.animations.ranking,
+              repeat: true,
+              reverse: true,
+              width: MediaQuery.of(context).size.width - 100,
+              height: MediaQuery.of(context).size.height - 400,
+            ),
+          ]),
+        ));
+  }
+}
