@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/src/api/api.dart';
 import 'package:web_dashboard/src/app.dart';
@@ -27,9 +26,11 @@ class BetReferenceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _betApi = Provider.of<AppState>(context).api?.betApi;
     _userApi = Provider.of<AppState>(context).api?.userApi;
+    final title = chooseHome ? match.homeTeamEn : match.awayTeamEn;
+
     return Scaffold(
       appBar: AppBar(
-        title: AppText("Bet preference", color: SystemColor.WHITE, weight: FontWeight.w700),
+        title: AppText("Who are choosing $title?", color: SystemColor.WHITE, weight: FontWeight.w700),
       ),
       body: StreamBuilder<List<Bet>>(
           stream: _betApi?.getListBetForMatch(match.matchId!),
@@ -66,12 +67,15 @@ class BetReferenceScreen extends StatelessWidget {
             return _emptyView();
         }
 
-        return ListView.builder(
-          itemCount: userInBets?.length ?? 0,
+        return ListView.separated(
+          itemCount: userInBets.length,
           itemBuilder: (ctx, index) {
-            final user = userInBets?[index];
+            final user = userInBets[index];
             return _userItemCell(user);
-          }
+          }, 
+          separatorBuilder: (BuildContext context, int index) {  
+            return Divider();
+          },
         );
       }
     );
@@ -79,22 +83,27 @@ class BetReferenceScreen extends StatelessWidget {
   
   Widget _userItemCell(User? user) {
     final url = user?.photoUrl ?? "";
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
-          radius: 30,
-          child: url.isNotEmpty ? CachedNetworkImage(
-            imageUrl: url,
-            cacheKey: url,
-            filterQuality: FilterQuality.low,
-            memCacheWidth: PHOTO_COMPRESS_SIZE,
-            maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
-            fit: BoxFit.cover) : Container()
-        ),
-        SizedBox(width: 10),
-        AppText(user?.displayName ?? "", size: 20, color: SystemColor.BLACK, weight: FontWeight.w700)
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          CircleAvatar(
+              backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
+              radius: 25,
+              child: url.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: url,
+                      cacheKey: url,
+                      filterQuality: FilterQuality.low,
+                      memCacheWidth: PHOTO_COMPRESS_SIZE,
+                      maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
+                      fit: BoxFit.cover)
+                  : Container()),
+          SizedBox(width: 10),
+          AppText(user?.displayName ?? "",
+              size: 18, color: SystemColor.BLACK, weight: FontWeight.w700)
+        ],
+      ),
     );
   }
   
