@@ -14,6 +14,13 @@ class BetResult {
   bool get isLoose {
     return result == BetResulttype.lose;
   }
+
+  String get toValueString {
+    if (isLoose) {
+      return "Loosed";
+    }
+    return "Won";
+  }
 }
 
 class UserBet {
@@ -25,7 +32,7 @@ class UserBet {
     int total = user.amount ?? 0;
     bets.forEach((bet) {
       if (bet.isLoose) {
-        total -= bet.bet.amount ?? 0;
+        total -= (bet.bet.amount ?? 0);
       }
     });
     availableScore = total;

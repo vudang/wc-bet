@@ -7,4 +7,5 @@ class SystemColor {
   static const GREY = Color(0xFF6B6E79);
   static const GREY_LIGHT = Color(0xFFB5B6BD);
   static const BLUE = Color(0xFF4C92E3);
+  static const GREEN = Color(0xFF08671A);
 }

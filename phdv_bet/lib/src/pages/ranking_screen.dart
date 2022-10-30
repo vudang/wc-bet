@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:web_dashboard/src/api/api.dart';
 import 'package:web_dashboard/src/app.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/model/user.dart';
+import 'package:web_dashboard/src/pages/user_bet_screen.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 
 import '../assets.dart';
@@ -14,6 +16,7 @@ import '../model/bet.dart';
 import '../model/match.dart';
 import '../model/odd.dart';
 import '../model/bet_result.dart';
+import '../utils/constants.dart';
 
 class RankingScreen extends StatefulWidget {
   @override
@@ -84,7 +87,8 @@ class _RankingScreenState extends State<RankingScreen> {
         return result;
       } else {
         /// Không BET mặc định là thua
-        final result = BetResult(bet, BetResulttype.lose);
+        final looseBet = Bet(amount: odd.amount, matchId: odd.matchId, userId: user.userId);
+        final result = BetResult(looseBet, BetResulttype.lose);
         return result;
       }
     }).toList();
@@ -107,18 +111,25 @@ class _RankingScreenState extends State<RankingScreen> {
         if (listRanking.isEmpty) {
           return _emptyView();
         }
-        return _contentView(listRanking);
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: _contentView(listRanking),
+        );
       }
     );
   }
 
   Widget _contentView(List<UserBet> listRanking) {
-    return ListView.separated(
-      separatorBuilder: (ctx, index) => Divider(),
-      itemCount: listRanking?.length ?? 0,
+    return ListView.builder(
+      itemCount: listRanking.length,
       itemBuilder: (ctx, index) {
-        final ranking = listRanking?[index];
-        return _rankingRow(ranking, index);
+        final ranking = listRanking[index];
+        return Card(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: _rankingRow(ranking, index),
+          ),
+        );
       }, 
     );
   }
@@ -126,6 +137,17 @@ class _RankingScreenState extends State<RankingScreen> {
   Widget _rankingRow(UserBet? ranking, int index) {
     return ListTile(
       leading: _ranking(index),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _avatar(ranking),
+          SizedBox(width: 5),
+          Icon(Icons.arrow_right)
+        ]
+      ),
+      onTap: () {
+        _showUserDetail(ranking!.user);
+      },
       title: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,6 +156,22 @@ class _RankingScreenState extends State<RankingScreen> {
           AppText("Points: ${ranking?.availableScore}", weight: FontWeight.w500, color: SystemColor.RED, size: 15)
         ],
       ),
+    );
+  }
+
+  Widget _avatar(UserBet? user) {
+    final url = user?.user.photoUrl ?? "";
+    return CircleAvatar(
+      backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
+      radius: 20,
+      child: url.isNotEmpty ? CachedNetworkImage(
+          imageUrl: url,
+          cacheKey: url,
+          filterQuality: FilterQuality.low,
+          memCacheWidth: PHOTO_COMPRESS_SIZE,
+          maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
+          fit: BoxFit.cover)
+      : Icon(Icons.emoji_people)
     );
   }
 
@@ -181,5 +219,10 @@ class _RankingScreenState extends State<RankingScreen> {
             ),
           ]),
         ));
+  }
+
+  _showUserDetail(User user) {
+    Navigator.of(context)
+    .push(MaterialPageRoute(builder: (context) => UserBetScreen(user: user)));
   }
 }
