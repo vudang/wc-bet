@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/model/odd.dart';
-import 'package:web_dashboard/src/model/ranking.dart';
+import 'package:web_dashboard/src/model/bet_result.dart';
 import 'package:web_dashboard/src/model/team.dart';
 part 'bet.g.dart';
 
@@ -41,15 +41,19 @@ class Bet {
     final totalHomeScore = (match.homeScore ?? 0).toDouble() + prefixValue;
     final totalAwayScore = match.awayScore ?? 0;
 
-    /// Chọn đội chủ nhà    
+    late BetResulttype result;
     final isChooseHome = teamChoosed.isHome;
     if (isChooseHome) {
-      return totalHomeScore >= totalAwayScore ? BetResulttype.win : BetResulttype.lose;
+      /// Chọn đội chủ nhà
+      result = totalHomeScore >= totalAwayScore ? BetResulttype.win : BetResulttype.lose;
+    } else {
+      /// Chọn đội khách
+      result = totalHomeScore <= totalAwayScore ? BetResulttype.win : BetResulttype.lose;
     }
-    
-    /// Chọn đội khách
-    return totalHomeScore <= totalAwayScore
-        ? BetResulttype.win
-        : BetResulttype.lose;
+
+    if (userId == "kRkzjqQD2FvXCMvhb7rp2BMeLGWD") {
+      print("Bet of user result: ${result}");
+    }
+    return result;
   }
 }
