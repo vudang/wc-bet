@@ -17,9 +17,9 @@ class BetResult {
 
   String get toValueString {
     if (isLoose) {
-      return "Loosed";
+      return "Lose";
     }
-    return "Won";
+    return "Win";
   }
 }
 

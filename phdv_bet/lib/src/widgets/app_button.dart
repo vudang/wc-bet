@@ -82,15 +82,15 @@ class _ButtonStyle {
   _ButtonStyle(this.style, this.state);
 
   Color normalColor() {
-    return SystemColor.BLACK;
+    return SystemColor.RED;
   }
 
   Color pressedColor() {
-    return SystemColor.BLACK.withOpacity(0.5);
+    return SystemColor.RED.withOpacity(0.5);
   }
 
   Color disableColor() {
-    return SystemColor.BLACK.withOpacity(0.5);
+    return SystemColor.RED.withOpacity(0.5);
   }
 
   Color textColor() {
