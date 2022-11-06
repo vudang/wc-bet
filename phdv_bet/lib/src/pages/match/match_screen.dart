@@ -30,12 +30,7 @@ class MatchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(context),
-      body: Row(
-        children: [
-          Expanded(child: _matchListView(context)),
-          Expanded(child: _matchDetailView(context))
-        ],
-      ),
+      body: _mainView(context)
     );
   }
 
@@ -44,6 +39,19 @@ class MatchScreen extends StatelessWidget {
       return null;
     }
     return AppBar(title: AppText("Match", size: 20, weight: FontWeight.w700, color: SystemColor.WHITE));
+  }
+
+  Widget _mainView(BuildContext context) {
+    if (ScreenHelper.isLargeScreen(context)) {
+      return Row(
+        children: [
+          Expanded(child: _matchListView(context)),
+          Expanded(child: _matchDetailView(context))
+        ],
+      );
+    }
+
+    return _matchListView(context);
   }
 
   Widget _matchListView(BuildContext context) {
