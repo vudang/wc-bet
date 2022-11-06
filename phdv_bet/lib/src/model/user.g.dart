@@ -13,6 +13,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       displayName: json['displayName'] as String?,
       email: json['email'] as String?,
       photoUrl: json['photoUrl'] as String?,
+      active: json['active'] as bool?,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) {
@@ -30,5 +31,6 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('displayName', instance.displayName);
   writeNotNull('email', instance.email);
   writeNotNull('photoUrl', instance.photoUrl);
+  writeNotNull('active', instance.active);
   return val;
 }

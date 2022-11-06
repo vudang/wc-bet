@@ -7,7 +7,7 @@ import 'api/firebase.dart';
 import 'auth/auth.dart';
 import 'auth/firebase.dart';
 import 'pages/home_screen.dart';
-import 'pages/auth_screen.dart';
+import 'pages/auth/auth_screen.dart';
 
 class AppState {
   final Auth auth;
@@ -19,11 +19,11 @@ class AppState {
 /// Creates a [Api] for the given user. This allows users of this
 /// widget to specify whether [MockDashboardApi] or [ApiBuilder] should be
 /// created when the user logs in.
-typedef ApiBuilder = Api Function(User user);
+typedef ApiBuilder = Api Function();
 
 /// An app that displays a personalized dashboard.
 class DashboardApp extends StatefulWidget {
-  static Api _apiBuilder(User user) => FirebaseApi(FirebaseFirestore.instance, user.uid);
+  static Api _apiBuilder() => FirebaseApi(FirebaseFirestore.instance);
 
   final Auth auth;
   final ApiBuilder apiBuilder;
@@ -100,15 +100,16 @@ class _SignInSwitcherState extends State<SignInSwitcher> {
           ? HomePage(
               onSignOut: _handleSignOut,
             )
-          : SignInScreen(
+          : AuthScreen(
               auth: widget.appState!.auth,
+              userApi: widget.apiBuilder!().userApi,
               onSuccess: _handleSignIn,
             ),
     );
   }
 
   void _handleSignIn(User user) {
-    widget.appState!.api = widget.apiBuilder!(user);
+    widget.appState!.api = widget.apiBuilder!();
 
     setState(() {
       _isSignedIn = true;

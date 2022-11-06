@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/widgets/app_button.dart';
@@ -25,33 +27,33 @@ class AppConfirmPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20)),
-              color: SystemColor.WHITE,
-            ),
-            height: 300,
-            width: MediaQuery.of(context).size.width,
-            child: Material(child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppText(title,
-                    color: SystemColor.BLACK,
-                    size: 24,
-                    weight: FontWeight.w700),
-                SizedBox(height: 20),
-                AppText(message,
-                  color: SystemColor.BLACK,
-                  size: 18,
-                  weight: FontWeight.w500),
-                SizedBox(height: 60),
-                _buttons()
-                
-              ],
-            ))
-          );
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20)),
+        color: SystemColor.WHITE,
+      ),
+      height: 300,
+      width: min(MediaQuery.of(context).size.width, 400),
+      child: Material(child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppText(title,
+              color: SystemColor.BLACK,
+              size: 24,
+              weight: FontWeight.w700),
+          SizedBox(height: 20),
+          AppText(message,
+            color: SystemColor.BLACK,
+            size: 18,
+            weight: FontWeight.w500),
+          SizedBox(height: 60),
+          _buttons()
+          
+        ],
+      ))
+    );
   }
 
   Widget _buttons() {
@@ -65,19 +67,25 @@ class AppConfirmPopup extends StatelessWidget {
   }
 
   Widget _positiveButton() {
-    return AppSystemRegularButton(
-      text: positiveButton,
-      onPressed: onPositivePressed,
-      customColor: SystemColor.RED,
+    return Visibility(
+      visible: positiveButton.isNotEmpty,
+      child: AppSystemRegularButton(
+        text: positiveButton,
+        onPressed: onPositivePressed,
+        customColor: SystemColor.RED,
+      ),
     );
   }
 
   Widget _negativeButton() {
-    return AppSystemRegularButton(
-      customColor: SystemColor.GREY_LIGHT.withOpacity(0.5),
-      customTextColor: SystemColor.GREY,
-      text: negativeButton,
-      onPressed: onNegativePressed,
+    return Visibility(
+      visible: negativeButton.isNotEmpty,
+      child: AppSystemRegularButton(
+        customColor: SystemColor.GREY_LIGHT.withOpacity(0.5),
+        customTextColor: SystemColor.GREY,
+        text: negativeButton,
+        onPressed: onNegativePressed,
+      ),
     );
   }
 }

@@ -27,7 +27,7 @@ class FirebaseApi implements Api {
   @override
   final UserApi userApi;
 
-  FirebaseApi(FirebaseFirestore firestore, String userId) :
+  FirebaseApi(FirebaseFirestore firestore) :
    footballMatchApi = FirebaseFootballMatchApi(firestore),
         standingApi = FirebaseStandingApi(firestore),
              oddApi = FirebaseOddApi(firestore),

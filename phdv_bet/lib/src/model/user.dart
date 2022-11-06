@@ -9,7 +9,8 @@ class User {
     this.availableAmount,
     this.displayName, 
     this.email,
-    this.photoUrl
+    this.photoUrl,
+    this.active
   });
 
   @JsonKey(name: "localId")
@@ -29,6 +30,9 @@ class User {
   
   @JsonKey(name: "photoUrl")
   final String? photoUrl;
+
+  @JsonKey(name: "active")
+  final bool? active;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

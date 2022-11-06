@@ -19,6 +19,7 @@ abstract class Api {
 abstract class UserApi {
   Future<List<User>> list();
   Future<User?> get(String userId);
+  Future<void> create();
 }
 
 
