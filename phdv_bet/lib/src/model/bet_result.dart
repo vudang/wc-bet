@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:web_dashboard/src/model/bet.dart';
 import 'package:web_dashboard/src/model/user.dart';
 
@@ -27,6 +29,10 @@ class UserBet {
   final User user;
   final List<BetResult> bets;
   int availableScore = 0;
+
+  int get loseScore {
+    return max((user.amount ?? 0) - availableScore, 0);
+  }
 
   UserBet(this.user, this.bets) {
     int total = user.amount ?? 0;

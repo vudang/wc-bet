@@ -79,8 +79,9 @@ class UserBetScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText(user.displayName ?? "", size: 20, weight: FontWeight.bold),
-                  SizedBox(height: 10),
-                  AppText("Points: ${userBet.availableScore}", color: SystemColor.RED, weight: FontWeight.bold),
+                  SizedBox(height: 5),
+                  AppText("Available: ${userBet.availableScore} pts", color: SystemColor.GREEN, weight: FontWeight.w700),
+                  AppText("Losed: ${userBet.loseScore} pts", color: SystemColor.RED, weight: FontWeight.w500),
                 ],
               )
             ],

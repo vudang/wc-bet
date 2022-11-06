@@ -4,10 +4,11 @@ import 'package:web_dashboard/src/app.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/model/standing.dart';
 import 'package:web_dashboard/src/model/team.dart';
-import 'package:web_dashboard/src/pages/match_list_screen.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/indicator.dart';
 import 'package:web_dashboard/src/widgets/team_flag.dart';
+
+import 'match/match_list_screen.dart';
 
 class StandingPage extends StatefulWidget {
   const StandingPage({
@@ -25,12 +26,24 @@ class _StandingPageState extends State<StandingPage> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    final _appState = Provider.of<AppState>(context);
+    _appState = Provider.of<AppState>(context);
+    return Scaffold(
+      appBar: _appBar(context),
+      body: _mainView(),
+    );
+  }
+
+  AppBar? _appBar(BuildContext context) {
+    return AppBar(
+        title: AppText("Standing",
+            size: 20, weight: FontWeight.w700, color: SystemColor.WHITE));
+  }
+
+  Widget _mainView() {
     return StreamBuilder<List<Standing>>(
       stream: _appState.api!.standingApi.subscribe(),
       builder: (context, snapshot) {

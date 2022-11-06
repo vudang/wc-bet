@@ -13,11 +13,9 @@ import 'package:web_dashboard/src/utils/bet_helper.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 
 import '../assets.dart';
-import '../model/bet.dart';
-import '../model/match.dart';
-import '../model/odd.dart';
 import '../model/bet_result.dart';
 import '../utils/constants.dart';
+import '../utils/screen_helper.dart';
 
 class RankingScreen extends StatefulWidget {
   @override
@@ -71,6 +69,22 @@ class _RankingScreenState extends State<RankingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _appBar(context),
+      body: _mainView(),
+    );
+  }
+
+  AppBar? _appBar(BuildContext context) {
+    if (ScreenHelper.isLargeScreen(context)) {
+      return null;
+    }
+    return AppBar(
+        title: AppText("Ranking",
+            size: 20, weight: FontWeight.w700, color: SystemColor.WHITE));
+  }
+
+  Widget _mainView() {
     return StreamBuilder<List<UserBet>>(
       stream: _rankingStream.stream,
       builder: (ctx, snapshot) {
