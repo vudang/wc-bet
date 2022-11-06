@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/model/user.dart';
 import 'package:web_dashboard/src/utils/constants.dart';
+import 'package:web_dashboard/src/utils/screen_helper.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/team_flag.dart';
 
@@ -58,7 +59,7 @@ class UserBetScreen extends StatelessWidget {
     _context = context;
     _fetchData(context);
     return Scaffold(
-      appBar: AppBar(
+      appBar: ScreenHelper.isLargeScreen(context) ? null : AppBar(
         title: AppText(user.displayName ?? "", color: SystemColor.WHITE, weight: FontWeight.bold),
       ),
       body: _userBet()

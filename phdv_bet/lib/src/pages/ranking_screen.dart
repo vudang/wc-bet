@@ -28,6 +28,7 @@ class _RankingScreenState extends State<RankingScreen> {
   UserApi? _userApi;
   FootballMatchApi? _matchApi;
   StreamController<List<UserBet>> _rankingStream = StreamController();
+  StreamController<User> _userDetailStream = StreamController();
 
   _fetchData() async {
     final api = Provider.of<AppState>(context, listen: false).api;
@@ -101,6 +102,32 @@ class _RankingScreenState extends State<RankingScreen> {
   }
 
   Widget _contentView(List<UserBet> listRanking) {
+    if (ScreenHelper.isLargeScreen(context)) {
+      return Row(
+        children: [
+          Expanded(child: _rankingView(listRanking)),
+          Expanded(child: _userDetailView()),
+        ],
+      );
+    }
+
+    return _rankingView(listRanking);
+  }
+
+  Widget _userDetailView() {
+    return StreamBuilder<User?>(
+      stream: _userDetailStream.stream,
+      builder: ((context, snapshot) {
+        final user = snapshot.data;
+        if (user == null) {
+          return Container();
+        }
+        return  UserBetScreen(user: user);
+      })
+    );
+  }
+
+  Widget _rankingView(List<UserBet> listRanking) {
     return ListView.builder(
       itemCount: listRanking.length,
       itemBuilder: (ctx, index) {
@@ -203,7 +230,11 @@ class _RankingScreenState extends State<RankingScreen> {
   }
 
   _showUserDetail(User user) {
-    Navigator.of(context)
-    .push(MaterialPageRoute(builder: (context) => UserBetScreen(user: user)));
+    if (ScreenHelper.isLargeScreen(context)) {
+      _userDetailStream.add(user);
+    } else {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => UserBetScreen(user: user)));
+    }
   }
 }
