@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 
 class DateHelper {
   static DateTime parseDateTime({required String input, String format: "MM/dd/yyyy HH:mm"}) {
-    return DateFormat(format).parseUTC(input).toLocal();
+    return DateFormat(format).parse(input);
   }
 }
 

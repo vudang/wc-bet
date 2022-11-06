@@ -11,6 +11,7 @@ import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/model/odd.dart';
 import 'package:web_dashboard/src/model/team.dart';
 import 'package:web_dashboard/src/pages/bet_reference_screen.dart';
+import 'package:web_dashboard/src/utils/screen_helper.dart';
 import 'package:web_dashboard/src/widgets/app_confirm_popup.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/congratulations.dart';
@@ -108,7 +109,7 @@ class OddScreen extends StatelessWidget {
               children: [
                 _homeTeam(match),
                 SizedBox(width: 10),
-                AppText("VS", weight: FontWeight.w500, size: 20, color: SystemColor.WHITE),
+                AppText(match.finished == true ? "${match.homeScore} : ${match.awayScore}" : "VS", weight: FontWeight.w500, size: 20, color: SystemColor.WHITE),
                 SizedBox(width: 10),
                 _awayTeam(match)
               ],
@@ -164,7 +165,7 @@ class OddScreen extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              AppText("Odds", weight: FontWeight.bold),
+              AppText("Place your bet", weight: FontWeight.bold),
               SizedBox(height: 20),
               Row(
                 children: [
@@ -207,6 +208,9 @@ class OddScreen extends StatelessWidget {
           }
         }
 
+        final flag = isHome ? match.homeFlag : match.awayFlag;
+        final teamName = isHome ? match.homeTeamEn : match.awayTeamEn;
+
         return Expanded(
           child: GestureDetector(
             onTap: () => canBet == false ? null : _selectedOdds(odds, isHome, context),
@@ -217,8 +221,17 @@ class OddScreen extends StatelessWidget {
                 color: color,
               ),
               child: Center(
-                  child: AppText("${text ?? ""} ${odds.label ?? ""}",
-                      size: 20, weight: FontWeight.bold, color: txtcolor)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TeamFag(url: flag ?? ""),
+                      SizedBox(width: 10),
+                      AppText("Choose $teamName",
+                          size: 17, weight: FontWeight.w500, color: txtcolor)
+                    ],
+                  )
+                  
+              ),
             )
           ),
         );
@@ -280,11 +293,7 @@ class OddScreen extends StatelessWidget {
   
   _selectedOdds(Odd odds, bool isHome, BuildContext context) {
     final chooseTeam = (isHome ? odds.teamHome : odds.teamAway)?.toLowerCase();
-    showCupertinoModalPopup(
-      context: context, 
-      barrierColor: SystemColor.BLACK.withOpacity(0.8),
-      builder: (_) {
-        return AppConfirmPopup(
+    final dialog = AppConfirmPopup(
           title: "Are you sure with your decision?",
           message: "When you press `BET $chooseTeam` button, you won't have second chance :D",
           positiveButton: "BET $chooseTeam",
@@ -301,8 +310,13 @@ class OddScreen extends StatelessWidget {
             }
           },
         );
-      }
-    );
+        
+    showCupertinoModalPopup(
+      context: context,
+      barrierColor: SystemColor.BLACK.withOpacity(0.8),
+      builder: (_) {
+        return dialog;
+    });
   }
   
   _selectedHomeRef() {

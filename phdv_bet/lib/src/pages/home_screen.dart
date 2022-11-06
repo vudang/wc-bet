@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/pages/account_screen.dart';
 import 'package:web_dashboard/src/pages/ranking_screen.dart';
-import 'package:web_dashboard/src/pages/standing_sceen.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import '../widgets/third_party/adaptive_scaffold.dart';
 import 'match/match_screen.dart';

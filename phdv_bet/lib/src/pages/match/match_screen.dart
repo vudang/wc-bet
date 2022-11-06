@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/model/match.dart';
@@ -9,10 +10,16 @@ import 'package:web_dashboard/src/utils/screen_helper.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 
 import '../../app.dart';
+import '../../assets.dart';
 import 'match_list_screen.dart';
+
+enum MatchFilterType {
+  today, comming, finished
+}
 
 class MatchScreen extends StatelessWidget {
   final StreamController<int> _segmentController = StreamController<int>();
+  final StreamController<FootballMatch?> _selectedMatchController = StreamController<FootballMatch?>();
   final _pageController = PageController();
 
   MatchScreen({super.key}) {
@@ -23,8 +30,11 @@ class MatchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(context),
-      body: Column(
-        children: [_headerView(), Expanded(child: _matches(context))],
+      body: Row(
+        children: [
+          Expanded(child: _matchListView(context)),
+          Expanded(child: _matchDetailView(context))
+        ],
       ),
     );
   }
@@ -34,6 +44,25 @@ class MatchScreen extends StatelessWidget {
       return null;
     }
     return AppBar(title: AppText("Match", size: 20, weight: FontWeight.w700, color: SystemColor.WHITE));
+  }
+
+  Widget _matchListView(BuildContext context) {
+    return Column(
+        children: [_headerView(), Expanded(child: _matches(context))],
+      );
+  }
+
+  Widget _matchDetailView(BuildContext context) {
+    return StreamBuilder<FootballMatch?>(
+      stream: _selectedMatchController.stream,
+      builder: (ctx, snapshot) {
+        final match = snapshot.data;
+        return Visibility(
+          visible: ScreenHelper.isLargeScreen(context) && match != null,
+          child: match == null ? Container() : OddScreen(match: match),
+        );
+      }
+    );
   }
 
   Widget _headerView() {
@@ -52,9 +81,11 @@ class MatchScreen extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(width: 2),
-                _headerItem("Comming", index == 0, 0),
+                _headerItem("Today", index == 0, MatchFilterType.today),
                 SizedBox(width: 10),
-                _headerItem("Finished", index == 1, 1),
+                _headerItem("Comming", index == 1, MatchFilterType.comming),
+                SizedBox(width: 10),
+                _headerItem("Finished", index == 2, MatchFilterType.finished),
                 SizedBox(width: 2),
               ]),
           ),
@@ -63,12 +94,12 @@ class MatchScreen extends StatelessWidget {
     );
   }
 
-  Widget _headerItem(String title, bool selected, int index) {
+  Widget _headerItem(String title, bool selected, MatchFilterType type) {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          _segmentController.add(index);
-          _pageController.animateToPage(index, duration: Duration(milliseconds: 300 ), curve: Curves.linear);
+          _segmentController.add(type.index);
+          _pageController.animateToPage(type.index, duration: Duration(milliseconds: 300 ), curve: Curves.linear);
         },
         child:  Container(
           height: 36,
@@ -102,18 +133,36 @@ class MatchScreen extends StatelessWidget {
   Widget _machesWidget(List<FootballMatch> matches, BuildContext context) {
     return PageView.builder(
       controller: _pageController,
-      itemCount: 2,
+      itemCount: 3,
       onPageChanged: (value) {
         _segmentController.add(value);
+        _showFirstMatchDefault(value, context);
       },
       itemBuilder: (BuildContext context, int index) {
         if (index == 0) {
+          return _matchToday(matches, context);
+        }
+        if (index == 1) {
           return _matchComming(matches, context);
         }
         return _matchFinished(matches, context);
       },
     );
   }
+
+  Widget _matchToday(List<FootballMatch> matches, BuildContext context) {
+    final comming = matches.where((match) {
+      return (match.date?.millisecondsSinceEpoch ?? 0) < DateTime.now().millisecondsSinceEpoch + 86400000;
+    });
+    if (comming.isEmpty) {
+      return _emptyView();
+    }
+    return MatchListScreen(
+      list: comming.toList(),
+      onSelected: (match) => _selectedMatch(match, context),
+    );
+  }
+
 
   Widget _matchComming(List<FootballMatch> matches, BuildContext context) {
     final comming = matches.where((element) => element.finished == false);
@@ -131,8 +180,39 @@ class MatchScreen extends StatelessWidget {
     );
   }
 
+
+  Widget _emptyView() {
+    return Align(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 100),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Lottie.asset(
+              Assets.animations.football,
+              repeat: true,
+              reverse: true,
+              width: 150,
+              height: 150,
+            ),
+            AppText("No match today :(")
+          ]),
+        )
+    );
+  }
+
   _selectedMatch(FootballMatch match, BuildContext context) {
+    if (ScreenHelper.isLargeScreen(context)) {
+      _selectedMatchController.add(match);
+      return;
+    }
+
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => OddScreen(match: match)));
+  }
+  
+  _showFirstMatchDefault(int value, BuildContext context) {
+    if (!ScreenHelper.isLargeScreen(context)) {
+      return;
+    }
   }
 }
