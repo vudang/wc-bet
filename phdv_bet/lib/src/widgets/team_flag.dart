@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/utils/constants.dart';
@@ -19,7 +20,7 @@ class TeamFag extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
           border: Border.all(color: SystemColor.GREY_LIGHT, width: 2)),
-      child: CachedNetworkImage(
+      child: url.isEmpty ? Icon(CupertinoIcons.flag_circle_fill, color: SystemColor.RED) : CachedNetworkImage(
           imageUrl: url,
           cacheKey: url,
           filterQuality: FilterQuality.low,

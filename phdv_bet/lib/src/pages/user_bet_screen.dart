@@ -147,7 +147,7 @@ class UserBetScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
-            Expanded(child: _matchInfo(match)),
+            Expanded(child: _matchInfo(match, bet.bet.teamChoosed.isHome, isMissing: bet.bet.choosedTeam == null)),
             SizedBox(width: 30),
             _result(bet),
             SizedBox(width: 10),
@@ -157,14 +157,14 @@ class UserBetScreen extends StatelessWidget {
     );
   }
 
-  Widget _matchInfo(FootballMatch match) {
+  Widget _matchInfo(FootballMatch match, bool chooseHome, {bool isMissing = false}) {
     return Row(
       children: [
-        _teamHome(match),
+        _teamHome(match, chooseHome, isMissing: isMissing),
         SizedBox(width: 5),
-        AppText("${match.homeScore} : ${match.awayScore}", weight: FontWeight.bold),
+        AppText("${match.homeScore ?? "-"} : ${match.awayScore ?? "-"}", weight: FontWeight.bold),
         SizedBox(width: 5),
-        _teamAway(match)
+        _teamAway(match, !chooseHome)
       ],
     );
   }
@@ -188,20 +188,24 @@ class UserBetScreen extends StatelessWidget {
     );
   }
 
-  Widget _teamHome(FootballMatch match) {
+  Widget _teamHome(FootballMatch match, bool isChoosed, {bool isMissing = false}) {
+    final text = isMissing ? "Missed bet" : (isChoosed ? "(Choosed)" : " ");
     return Expanded(child: Column(
       children: [
         TeamFag(url: match.homeFlag ?? ""),
         AppText(match.homeTeamEn ?? ""),
+        AppText(text, color: SystemColor.RED, size: 15, fontStyle: FontStyle.italic)
       ],
     ));
   }
 
-  Widget _teamAway(FootballMatch match) {
+  Widget _teamAway(FootballMatch match, bool isChoosed, {bool isMissing = false}) {
+    final text = isMissing ? "Missed bet" : (isChoosed ? "(Choosed)" : " ");
     return Expanded(child: Column(
       children: [
         TeamFag(url: match.awayFlag ?? ""),
         AppText(match.awayTeamEn ?? ""),
+        AppText(text, color: SystemColor.RED, size: 15, fontStyle: FontStyle.italic)
       ],
     ));
   }

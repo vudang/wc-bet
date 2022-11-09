@@ -11,6 +11,7 @@ import 'package:web_dashboard/src/widgets/app_text.dart';
 
 import '../../app.dart';
 import '../../assets.dart';
+import 'match_list_bet_screen.dart';
 import 'match_list_screen.dart';
 
 enum MatchFilterType {
@@ -165,7 +166,7 @@ class MatchScreen extends StatelessWidget {
     if (comming.isEmpty) {
       return _emptyView();
     }
-    return MatchListScreen(
+    return MatchListAndBetScreen(
       list: comming.toList(),
       onSelected: (match) => _selectedMatch(match, context),
     );
@@ -174,7 +175,7 @@ class MatchScreen extends StatelessWidget {
 
   Widget _matchComming(List<FootballMatch> matches, BuildContext context) {
     final comming = matches.where((element) => element.finished == false);
-    return MatchListScreen(
+    return MatchListAndBetScreen(
       list: comming.toList(),
       onSelected: (match) => _selectedMatch(match, context),
     );
@@ -182,7 +183,7 @@ class MatchScreen extends StatelessWidget {
 
   Widget _matchFinished(List<FootballMatch> matches, BuildContext context) {
     final comming = matches.where((element) => element.finished == true);
-    return MatchListScreen(
+    return MatchListAndBetScreen(
       list: comming.toList(),
       onSelected: (match) => _selectedMatch(match, context),
     );
