@@ -166,8 +166,12 @@ class OddScreen extends StatelessWidget {
         final odds = snapshot.data;
         if (odds == null) {
           return const Center(
-            child: AppText(
-                "Odds for this match is not available at the moment. Please check back later."),
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: AppText(
+                  "Odds for this match is not available at the moment. Please check back later.",
+                  color: SystemColor.RED),
+            ),
           );
         }
 
