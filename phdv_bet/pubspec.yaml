@@ -33,9 +33,22 @@ dev_dependencies:
     sdk: flutter
   grinder: ^0.9.0
   json_serializable: ^6.2.0
+  flutter_launcher_icons: ^0.10.0
+
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
     - assets/icons/
     - assets/animations/
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icons/logo.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"

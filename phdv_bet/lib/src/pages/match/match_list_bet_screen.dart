@@ -111,9 +111,9 @@ class MatchListAndBetScreen extends StatelessWidget {
               SizedBox(height: 16),
               AppText(DateHelper.parseDateTime(input: match.localDate ?? "").toCurrentTimeZone()),
               SizedBox(height: 16),
-              _placeBet(match),
+              _oddInfo(match),
               SizedBox(height: 5),
-              _oddInfo(match)
+              _placeBet(match),
             ],
           ),
         ),
@@ -175,7 +175,8 @@ class MatchListAndBetScreen extends StatelessWidget {
           child: AppSystemRegularButton(
             state: state,
             customTextColor: textColor,
-            text: "Choose ${match.homeTeamEn}",
+            text: "👍 ${match.homeTeamEn}",
+            customTextSize: 14,
             customDisableColor: isChooseHome ? SystemColor.RED.withOpacity(0.2) : SystemColor.GREY_LIGHT.withOpacity(0.2),
             onPressed: (() => _selectedOdds(TeamType.home(), odd))
           )
@@ -185,7 +186,8 @@ class MatchListAndBetScreen extends StatelessWidget {
           child: AppSystemRegularButton(
             state: state,
             customTextColor: textColor,
-            text: "Choose ${match.awayTeamEn}", 
+            text: "👍 ${match.awayTeamEn}", 
+            customTextSize: 14,
             customDisableColor: isChooseAway ? SystemColor.RED.withOpacity(0.2) : SystemColor.GREY_LIGHT.withOpacity(0.2),
             onPressed: (() => _selectedOdds(TeamType.away(), odd))
           )

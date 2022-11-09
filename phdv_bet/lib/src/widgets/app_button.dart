@@ -111,6 +111,7 @@ class AppSystemRegularButton extends StatefulWidget {
   final Color? customDisableColor;
   final Color? customColor;
   final double? width;
+  final double? customTextSize;
   final bool disableAfterPressed; // Button will be animate to disable state after pressed on
 
   const AppSystemRegularButton({
@@ -125,6 +126,7 @@ class AppSystemRegularButton extends StatefulWidget {
     this.disableAfterPressed = false,
     this.width,
     this.customColor,
+    this.customTextSize,
     this.size = AppButtonSize.large,
     this.style = AppButtonStyle.purple,
     this.state = AppButtonState.normal,
@@ -243,7 +245,7 @@ class _AppSystemRegularButtonState extends State<AppSystemRegularButton> with Si
                 AppText(
                     widget.text,
                     align: TextAlign.center,
-                    size: _buttonSize.textSize(),
+                    size: widget.customTextSize ?? _buttonSize.textSize(),
                     color: (widget.customTextColor ?? _buttonStyle.textColor()).withOpacity(textOpacity),
                     weight: FontWeight.w700
                 )

@@ -95,7 +95,7 @@ class MatchScreen extends StatelessWidget {
                 SizedBox(width: 2),
                 _headerItem("Today", index == 0, MatchFilterType.today),
                 SizedBox(width: 10),
-                _headerItem("Up comming", index == 1, MatchFilterType.comming),
+                _headerItem("Upcoming", index == 1, MatchFilterType.comming),
                 SizedBox(width: 10),
                 _headerItem("Played", index == 2, MatchFilterType.finished),
                 SizedBox(width: 2),

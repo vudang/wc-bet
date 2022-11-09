@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>452255726009-g6gc2fsojosfdgpnf9vjsd7e7kr90tl3.apps.googleusercontent.com</string>
+	<string>452255726009-76290rtfb7bvq8nn4m39n6qbeud91g80.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.452255726009-g6gc2fsojosfdgpnf9vjsd7e7kr90tl3</string>
+	<string>com.googleusercontent.apps.452255726009-76290rtfb7bvq8nn4m39n6qbeud91g80</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBB9Os6jxO7C0eso1KuXWPdJctaU8Aer9A</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ph.bet</string>
+	<string>com.pizzahut.draftapp</string>
 	<key>PROJECT_ID</key>
 	<string>worldbet-aaa29</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:452255726009:ios:8deb6f0c7a39737b689e68</string>
+	<string>1:452255726009:ios:c27c29f76fcf27f3689e68</string>
 </dict>
 </plist>
