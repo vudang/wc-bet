@@ -69,6 +69,7 @@ class MatchListAndBetScreen extends StatelessWidget {
   }
 
   Widget _matchItem(FootballMatch match) {
+    final odd = odds.firstWhere((element) => element.matchId == match.matchId, orElse: (() => Odd()));
     return ListTile(
       onTap: () {
         if (onSelected != null) {
@@ -88,7 +89,7 @@ class MatchListAndBetScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.sports_baseball_rounded, color: SystemColor.RED),
                   SizedBox(width: 10),
-                  AppText("Group ${match.group} (${match.matchId})", color: SystemColor.RED)
+                  AppText("(${match.matchId}) - Group ${match.group} - ${odd.amount} pts", color: SystemColor.RED)
                 ],
               ),
               SizedBox(height: 16),
