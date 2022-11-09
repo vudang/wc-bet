@@ -84,9 +84,9 @@ class UserBetScreen extends StatelessWidget {
                   AppText(user.displayName ?? "",
                       size: 20, weight: FontWeight.bold),
                   SizedBox(height: 5),
-                  AppText("Available: ${userBet.availableScore} pts",
+                  AppText("Balance: ${userBet.availableScore} pts",
                       color: SystemColor.GREEN, weight: FontWeight.w700),
-                  AppText("Losed: ${userBet.loseScore} pts",
+                  AppText("Lost: ${userBet.loseScore} pts",
                       color: SystemColor.RED, weight: FontWeight.w500),
                 ],
               )
@@ -108,7 +108,7 @@ class UserBetScreen extends StatelessWidget {
                 memCacheWidth: PHOTO_COMPRESS_SIZE,
                 maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
                 fit: BoxFit.cover)
-            : Icon(Icons.emoji_people));
+            : Image.asset(Assets.icons.ic_unknown_user, width: 50, height: 50));
   }
 
   Widget _userBet() {

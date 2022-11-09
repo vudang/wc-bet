@@ -50,14 +50,13 @@ class _RankingScreenState extends State<RankingScreen> {
 
     final ranking = allUser?.map((user) {
       final userBet = BetHelper.getUserBetData(
-        user: user, 
-        bets: allBets ?? [], 
-        matchs: allMatchFinished ?? [], 
-        odds: allOddsLocked ?? []
-      );
+          user: user,
+          bets: allBets ?? [],
+          matchs: allMatchFinished ?? [],
+          odds: allOddsLocked ?? []);
       return userBet;
     }).toList();
-    
+
     ranking?.sort((a, b) => b.availableScore.compareTo(a.availableScore));
     _rankingStream.add(ranking ?? []);
   }
@@ -87,18 +86,17 @@ class _RankingScreenState extends State<RankingScreen> {
 
   Widget _mainView() {
     return StreamBuilder<List<UserBet>>(
-      stream: _rankingStream.stream,
-      builder: (ctx, snapshot) {
-        final listRanking = snapshot.data ?? [];
-        if (listRanking.isEmpty) {
-          return _emptyView();
-        }
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: _contentView(listRanking),
-        );
-      }
-    );
+        stream: _rankingStream.stream,
+        builder: (ctx, snapshot) {
+          final listRanking = snapshot.data ?? [];
+          if (listRanking.isEmpty) {
+            return _emptyView();
+          }
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: _contentView(listRanking),
+          );
+        });
   }
 
   Widget _contentView(List<UserBet> listRanking) {
@@ -116,15 +114,14 @@ class _RankingScreenState extends State<RankingScreen> {
 
   Widget _userDetailView() {
     return StreamBuilder<User?>(
-      stream: _userDetailStream.stream,
-      builder: ((context, snapshot) {
-        final user = snapshot.data;
-        if (user == null) {
-          return Container();
-        }
-        return  UserBetScreen(user: user);
-      })
-    );
+        stream: _userDetailStream.stream,
+        builder: ((context, snapshot) {
+          final user = snapshot.data;
+          if (user == null) {
+            return Container();
+          }
+          return UserBetScreen(user: user);
+        }));
   }
 
   Widget _rankingView(List<UserBet> listRanking) {
@@ -138,21 +135,18 @@ class _RankingScreenState extends State<RankingScreen> {
             child: _rankingRow(ranking, index),
           ),
         );
-      }, 
+      },
     );
   }
-  
+
   Widget _rankingRow(UserBet? ranking, int index) {
     return ListTile(
       leading: _ranking(index),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _avatar(ranking),
-          SizedBox(width: 5),
-          Icon(Icons.arrow_right)
-        ]
-      ),
+      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+        _avatar(ranking),
+        SizedBox(width: 5),
+        Icon(Icons.arrow_right)
+      ]),
       onTap: () {
         _showUserDetail(ranking!.user);
       },
@@ -161,7 +155,8 @@ class _RankingScreenState extends State<RankingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppText("${ranking?.user.displayName}", weight: FontWeight.w700),
-          AppText("Points: ${ranking?.availableScore}", weight: FontWeight.w500, color: SystemColor.RED, size: 15)
+          AppText("Points: ${ranking?.availableScore}",
+              weight: FontWeight.w500, color: SystemColor.RED, size: 15)
         ],
       ),
     );
@@ -170,17 +165,17 @@ class _RankingScreenState extends State<RankingScreen> {
   Widget _avatar(UserBet? user) {
     final url = user?.user.photoUrl ?? "";
     return CircleAvatar(
-      backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
-      radius: 20,
-      child: url.isNotEmpty ? CachedNetworkImage(
-          imageUrl: url,
-          cacheKey: url,
-          filterQuality: FilterQuality.low,
-          memCacheWidth: PHOTO_COMPRESS_SIZE,
-          maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
-          fit: BoxFit.cover)
-      : Icon(Icons.emoji_people)
-    );
+        backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
+        radius: 20,
+        child: url.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: url,
+                cacheKey: url,
+                filterQuality: FilterQuality.low,
+                memCacheWidth: PHOTO_COMPRESS_SIZE,
+                maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
+                fit: BoxFit.cover)
+            : Image.asset(Assets.icons.ic_unknown_user, width: 50, height: 50));
   }
 
   Widget _ranking(int index) {
@@ -197,9 +192,8 @@ class _RankingScreenState extends State<RankingScreen> {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
-        color: SystemColor.GREY_LIGHT.withOpacity(0.2)
-      ),
+          borderRadius: BorderRadius.circular(50),
+          color: SystemColor.GREY_LIGHT.withOpacity(0.2)),
       child: Align(
         alignment: Alignment.center,
         child: AppText(
@@ -233,7 +227,7 @@ class _RankingScreenState extends State<RankingScreen> {
     if (ScreenHelper.isLargeScreen(context)) {
       _userDetailStream.add(user);
     } else {
-        Navigator.of(context).push(
+      Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => UserBetScreen(user: user)));
     }
   }

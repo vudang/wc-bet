@@ -272,7 +272,7 @@ class OddScreen extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        AppText("References", weight: FontWeight.bold),
+        // AppText("References", weight: FontWeight.bold),
         _referenceChooseHome(),
         _referenceChooseAway()
       ]),

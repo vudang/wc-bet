@@ -20,8 +20,9 @@ class BetReferenceScreen extends StatelessWidget {
   BetApi? _betApi;
   UserApi? _userApi;
 
-  BetReferenceScreen({super.key, required this.match, required this.chooseHome});
-  
+  BetReferenceScreen(
+      {super.key, required this.match, required this.chooseHome});
+
   @override
   Widget build(BuildContext context) {
     _betApi = Provider.of<AppState>(context).api?.betApi;
@@ -30,7 +31,8 @@ class BetReferenceScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: AppText("Who are choosing $title?", color: SystemColor.WHITE, weight: FontWeight.w700),
+        title: AppText("Who are choosing $title?",
+            color: SystemColor.WHITE, weight: FontWeight.w700),
       ),
       body: StreamBuilder<List<Bet>>(
           stream: _betApi?.getListBetForMatch(match.matchId!),
@@ -39,48 +41,47 @@ class BetReferenceScreen extends StatelessWidget {
               padding: EdgeInsets.all(16),
               child: _listUsersInBet(context, snapshot.data),
             );
-          }
-      ),
+          }),
     );
   }
-  
+
   Widget _listUsersInBet(BuildContext context, List<Bet>? bets) {
     if (bets == null || bets.isEmpty) {
       return _emptyView();
     }
 
     return StreamBuilder<List<User>>(
-      stream: _userApi?.list().asStream(),
-      builder: (ctx, snapshot) {
-        final allUsers = snapshot.data;
+        stream: _userApi?.list().asStream(),
+        builder: (ctx, snapshot) {
+          final allUsers = snapshot.data;
 
-        /// Tìm user đang có trong danh sách bet của trận đấu
-        final userInBets = allUsers?.where((u) {
-          final bet = bets.firstWhere((b) => b.userId == u.userId, orElse: () => Bet());
-          if (chooseHome) {
-            return bet.teamChoosed.isHome;
-          }
-          return bet.teamChoosed.isAway;
-        }).toList();
+          /// Tìm user đang có trong danh sách bet của trận đấu
+          final userInBets = allUsers?.where((u) {
+            final bet = bets.firstWhere((b) => b.userId == u.userId,
+                orElse: () => Bet());
+            if (chooseHome) {
+              return bet.teamChoosed.isHome;
+            }
+            return bet.teamChoosed.isAway;
+          }).toList();
 
-        if (userInBets == null || userInBets.isEmpty) {
+          if (userInBets == null || userInBets.isEmpty) {
             return _emptyView();
-        }
+          }
 
-        return ListView.separated(
-          itemCount: userInBets.length,
-          itemBuilder: (ctx, index) {
-            final user = userInBets[index];
-            return _userItemCell(user);
-          }, 
-          separatorBuilder: (BuildContext context, int index) {  
-            return Divider();
-          },
-        );
-      }
-    );
+          return ListView.separated(
+            itemCount: userInBets.length,
+            itemBuilder: (ctx, index) {
+              final user = userInBets[index];
+              return _userItemCell(user);
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Divider();
+            },
+          );
+        });
   }
-  
+
   Widget _userItemCell(User? user) {
     final url = user?.photoUrl ?? "";
     return Padding(
@@ -98,7 +99,8 @@ class BetReferenceScreen extends StatelessWidget {
                       memCacheWidth: PHOTO_COMPRESS_SIZE,
                       maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
                       fit: BoxFit.cover)
-                  : Container()),
+                  : Image.asset(Assets.icons.ic_unknown_user,
+                      width: 50, height: 50)),
           SizedBox(width: 10),
           AppText(user?.displayName ?? "",
               size: 18, color: SystemColor.BLACK, weight: FontWeight.w700)
@@ -106,7 +108,7 @@ class BetReferenceScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _emptyView() {
     return Align(
         alignment: Alignment.center,
@@ -122,7 +124,6 @@ class BetReferenceScreen extends StatelessWidget {
             ),
             AppText("Nobody bet for this team :D")
           ]),
-        )
-    );
+        ));
   }
 }
