@@ -28,6 +28,7 @@ abstract class BetApi {
   Future<List<Bet>> list();
   Stream<List<Bet>> subscribe();
   Stream<List<Bet>> getListBetForMatch(int matchId);
+  Stream<List<Bet>> getListMyBet();
   Stream<Bet?> getMyBet(int matchId);
   Future<void> placeBet(Bet bet);
 }

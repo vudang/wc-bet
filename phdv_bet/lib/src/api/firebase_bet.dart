@@ -58,4 +58,19 @@ class FirebaseBetApi implements BetApi {
     final entries = querySnapshot.docs.map((doc) => Bet.fromJson(doc.data())).toList();
     return entries;
   }
+  
+  @override
+  Stream<List<Bet>> getListMyBet() {
+    final authID = FirebaseAuth.instance.currentUser?.uid;
+    if (authID == null) {
+      return Stream.fromIterable([]);
+    }
+    final snapshots = ref.where("userId", isEqualTo: authID).snapshots();
+    var result = snapshots.map<List<Bet>>((querySnapshot) {
+      return querySnapshot.docs.map<Bet>((snapshot) {
+        return Bet.fromJson(snapshot.data());
+      }).toList();
+    });
+    return result;
+  }
 }

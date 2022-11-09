@@ -164,7 +164,7 @@ class UserBetScreen extends StatelessWidget {
         SizedBox(width: 5),
         AppText("${match.homeScore ?? "-"} : ${match.awayScore ?? "-"}", weight: FontWeight.bold),
         SizedBox(width: 5),
-        _teamAway(match, !chooseHome)
+        _teamAway(match, !chooseHome, isMissing: isMissing)
       ],
     );
   }

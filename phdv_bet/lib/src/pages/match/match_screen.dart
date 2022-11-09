@@ -92,9 +92,9 @@ class MatchScreen extends StatelessWidget {
                 SizedBox(width: 2),
                 _headerItem("Today", index == 0, MatchFilterType.today),
                 SizedBox(width: 10),
-                _headerItem("Comming", index == 1, MatchFilterType.comming),
+                _headerItem("Up comming", index == 1, MatchFilterType.comming),
                 SizedBox(width: 10),
-                _headerItem("Finished", index == 2, MatchFilterType.finished),
+                _headerItem("Played", index == 2, MatchFilterType.finished),
                 SizedBox(width: 2),
               ]),
           ),
@@ -125,8 +125,12 @@ class MatchScreen extends StatelessWidget {
 
   Widget _matches(BuildContext context) {
     final appState = Provider.of<AppState>(context);
+    final matchStream = appState.api!.footballMatchApi.subscribe();
+    final oddStream = appState.api!.oddApi.list();
+    final betStream = appState.api!.betApi.getListMyBet();
+
     return StreamBuilder<List<FootballMatch>>(
-      stream: appState.api!.footballMatchApi.subscribe(),
+      stream: matchStream,
       builder: (ctx, snapshot) {
         if (snapshot.data == null) {
           return const Center(
