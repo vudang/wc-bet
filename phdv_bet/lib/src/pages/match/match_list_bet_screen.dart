@@ -88,7 +88,7 @@ class MatchListAndBetScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.sports_baseball_rounded, color: SystemColor.RED),
                   SizedBox(width: 10),
-                  AppText("Group ${match.group}", color: SystemColor.RED)
+                  AppText("Group ${match.group} (${match.matchId})", color: SystemColor.RED)
                 ],
               ),
               SizedBox(height: 16),
@@ -164,7 +164,7 @@ class MatchListAndBetScreen extends StatelessWidget {
 
     final mybet = userBets.firstWhere((element) => element.matchId == match.matchId, orElse: (() => Bet()));
     final hadBet = mybet.matchId != null;
-    final state = hadBet ? AppButtonState.disable : AppButtonState.normal;
+    final state = hadBet || match.finished == true ? AppButtonState.disable : AppButtonState.normal;
     final isChooseHome = hadBet && mybet.teamChoosed.isHome;
     final isChooseAway = hadBet && mybet.teamChoosed.isAway;
     final textColor = state == AppButtonState.disable ? SystemColor.BLACK : SystemColor.WHITE;
