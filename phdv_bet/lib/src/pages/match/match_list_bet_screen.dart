@@ -92,7 +92,9 @@ class MatchListAndBetScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 16),
-              AppText(DateHelper.parseDateTime(input: match.localDate ?? "").toCurrentTimeZone())
+              AppText(DateHelper.parseDateTime(input: match.localDate ?? "").toCurrentTimeZone()),
+              SizedBox(height: 5),
+              _oddInfo(match)
             ],
           ),
         ),
@@ -125,5 +127,13 @@ class MatchListAndBetScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _oddInfo(FootballMatch match) {
+    final odd = odds.firstWhere((element) => element.matchId == match.matchId && element.matchId != null, orElse: () => Odd());
+    if (odd.matchId == null) {
+      return AppText("Missing odds", fontStyle: FontStyle.italic, color: SystemColor.GREY_LIGHT);
+    }
+    return AppText("${odd.desciption ?? ""}", fontStyle: FontStyle.italic, color: SystemColor.GREY_LIGHT);
   }
 }

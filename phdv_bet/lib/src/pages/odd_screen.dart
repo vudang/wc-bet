@@ -224,8 +224,8 @@ class OddScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TeamFag(url: flag ?? ""),
-                      SizedBox(width: 10),
+                      // TeamFag(url: flag ?? ""),
+                      // SizedBox(width: 10),
                       AppText("Choose $teamName",
                           size: 17, weight: FontWeight.w500, color: txtcolor)
                     ],
@@ -250,7 +250,7 @@ class OddScreen extends StatelessWidget {
           
           return Visibility(
             visible: alreadyBet,
-            child: AppText("You was bet '$teamName'", color: SystemColor.RED.withOpacity(0.6)),
+            child: AppText("You bet '$teamName'", color: SystemColor.RED.withOpacity(0.6)),
           );
         });
   }

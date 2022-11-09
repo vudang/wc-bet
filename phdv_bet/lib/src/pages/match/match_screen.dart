@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:multiple_stream_builder/multiple_stream_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/src/color.dart';
+import 'package:web_dashboard/src/model/bet.dart';
 import 'package:web_dashboard/src/model/match.dart';
+import 'package:web_dashboard/src/model/odd.dart';
 import 'package:web_dashboard/src/pages/odd_screen.dart';
 import 'package:web_dashboard/src/utils/screen_helper.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
@@ -126,24 +129,27 @@ class MatchScreen extends StatelessWidget {
   Widget _matches(BuildContext context) {
     final appState = Provider.of<AppState>(context);
     final matchStream = appState.api!.footballMatchApi.subscribe();
-    final oddStream = appState.api!.oddApi.list();
+    final oddStream = appState.api!.oddApi.list(isFillterLocked: false).asStream();
     final betStream = appState.api!.betApi.getListMyBet();
 
-    return StreamBuilder<List<FootballMatch>>(
-      stream: matchStream,
+    return StreamBuilder3<List<FootballMatch>, List<Odd>, List<Bet>>(
+      streams: StreamTuple3(matchStream, oddStream, betStream),
       builder: (ctx, snapshot) {
-        if (snapshot.data == null) {
+        final matches = snapshot.snapshot1.data;
+        final odds = snapshot.snapshot2.data ?? [];
+        final myBets = snapshot.snapshot3.data ?? [];
+        if (matches == null) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        final matches = snapshot.data ?? [];
-        return _machesWidget(matches, context);
+        print("List of odd: ${odds.length}");
+        return _machesWidget(matches, odds, myBets, context);
       },
     );
   }
 
-  Widget _machesWidget(List<FootballMatch> matches, BuildContext context) {
+  Widget _machesWidget(List<FootballMatch> matches, List<Odd> odds, List<Bet> myBets, BuildContext context) {
     return PageView.builder(
       controller: _pageController,
       itemCount: 3,
@@ -153,17 +159,17 @@ class MatchScreen extends StatelessWidget {
       },
       itemBuilder: (BuildContext context, int index) {
         if (index == 0) {
-          return _matchToday(matches, context);
+          return _matchToday(matches, odds, myBets, context);
         }
         if (index == 1) {
-          return _matchComming(matches, context);
+          return _matchComming(matches, odds, myBets, context);
         }
-        return _matchFinished(matches, context);
+        return _matchFinished(matches, odds, myBets, context);
       },
     );
   }
 
-  Widget _matchToday(List<FootballMatch> matches, BuildContext context) {
+  Widget _matchToday(List<FootballMatch> matches, List<Odd> odds, List<Bet> myBets, BuildContext context) {
     final comming = matches.where((match) {
       return (match.date?.millisecondsSinceEpoch ?? 0) < DateTime.now().millisecondsSinceEpoch + 86400000;
     });
@@ -172,23 +178,29 @@ class MatchScreen extends StatelessWidget {
     }
     return MatchListAndBetScreen(
       list: comming.toList(),
+      odds: odds,
+      userBets: myBets,
       onSelected: (match) => _selectedMatch(match, context),
     );
   }
 
 
-  Widget _matchComming(List<FootballMatch> matches, BuildContext context) {
+  Widget _matchComming(List<FootballMatch> matches, List<Odd> odds, List<Bet> myBets, BuildContext context) {
     final comming = matches.where((element) => element.finished == false);
     return MatchListAndBetScreen(
       list: comming.toList(),
+      odds: odds,
+      userBets: myBets,
       onSelected: (match) => _selectedMatch(match, context),
     );
   }
 
-  Widget _matchFinished(List<FootballMatch> matches, BuildContext context) {
+  Widget _matchFinished(List<FootballMatch> matches, List<Odd> odds, List<Bet> myBets, BuildContext context) {
     final comming = matches.where((element) => element.finished == true);
     return MatchListAndBetScreen(
       list: comming.toList(),
+      odds: odds,
+      userBets: myBets,
       onSelected: (match) => _selectedMatch(match, context),
     );
   }

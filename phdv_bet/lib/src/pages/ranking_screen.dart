@@ -222,8 +222,8 @@ class _RankingScreenState extends State<RankingScreen> {
               Assets.animations.ranking,
               repeat: true,
               reverse: true,
-              width: MediaQuery.of(context).size.width - 100,
-              height: MediaQuery.of(context).size.height - 400,
+              width: 200,
+              height: 200,
             ),
           ]),
         ));

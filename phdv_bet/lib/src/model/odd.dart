@@ -61,10 +61,10 @@ class Odd {
     }
 
     if (prefix == "-") {
-      return "Đội $teamHome chấp đội $teamAway $label quả";
+      return "$teamHome chấp $teamAway $label quả";
     }
 
-    return "Đội $teamAway chấp đội $teamHome $label quả";
+    return "$teamAway đội $teamHome $label quả";
   }
 
 }
