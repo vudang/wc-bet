@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:web_dashboard/src/api/api.dart';
 import 'package:web_dashboard/src/app.dart';
 import 'package:web_dashboard/src/pages/standing_sceen.dart';
@@ -10,18 +11,21 @@ import '../utils/screen_helper.dart';
 import '../widgets/app_text.dart';
 
 enum AccountMenu {
-  profile, standing, help
+  profile, standing, rule, help 
 }
 
 class AccountScreen extends StatelessWidget {
   final _listMenus = [AccountMenu.profile, AccountMenu.standing, AccountMenu.help];
   late BuildContext _context;
-  late UserApi? _userApi;
+  UserApi? _userApi;
+  ConfigApi? _configApi;
 
   @override
   Widget build(BuildContext context) {
+    final api = Provider.of<AppState>(context).api;
     _context = context;
-    _userApi = Provider.of<AppState>(context).api?.userApi;
+    _userApi = api?.userApi;
+    _configApi = api?.configApi;
     return Scaffold(
       appBar: _appBar(context),
       body: _mainView(),
@@ -60,6 +64,8 @@ class AccountScreen extends StatelessWidget {
         return Icon(Icons.person);
       case AccountMenu.standing:
         return Icon(Icons.table_chart);
+      case AccountMenu.rule:
+        return Icon(Icons.rule);
       case AccountMenu.help:
         return Icon(Icons.help);
     }
@@ -71,8 +77,10 @@ class AccountScreen extends StatelessWidget {
         return AppText("Account");
       case AccountMenu.standing:
         return AppText("Standing");
+      case AccountMenu.rule:
+        return AppText("Game rules");
       case AccountMenu.help:
-        return AppText("Help");
+        return AppText("How to play?");
     }
   }
   
@@ -82,8 +90,10 @@ class AccountScreen extends StatelessWidget {
         return _gotoAccountDetail();
       case AccountMenu.standing:
         return _gotoStanding();
+      case AccountMenu.rule:
+        return _gotoRules();
       case AccountMenu.help:
-        return _gotoStanding();
+        return _gotoHelp();
     }
   }
 
@@ -95,6 +105,18 @@ class AccountScreen extends StatelessWidget {
     final user = await _userApi?.get(FirebaseAuth.instance.currentUser!.uid);
     Navigator.of(_context)
         .push(MaterialPageRoute(builder: (context) => UserBetScreen(user: user!)));
+  }
+
+  _gotoRules() async {
+    final config = await _configApi?.get();
+    Uri _url = Uri.parse(config?.helpUrl ?? "");
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
+  }
+  
+  _gotoHelp() {
+
   }
   
 }

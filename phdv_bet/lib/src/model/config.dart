@@ -6,7 +6,8 @@ part 'config.g.dart';
 class Config {
   Config({
     this.homeBannerUrl,
-    this.stadiumUrl
+    this.stadiumUrl,
+    this.helpUrl
   });
 
   @JsonKey(name: "home_banner_url")
@@ -14,6 +15,9 @@ class Config {
 
   @JsonKey(name: "stadium_url")
   final String? stadiumUrl;
+
+  @JsonKey(name: "help_url")
+  final String? helpUrl;
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigToJson(this);

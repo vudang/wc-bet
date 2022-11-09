@@ -13,7 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await initFirebaseForWeb();
-    await FirebaseAuth.instance.setPersistence(Persistence.SESSION);
+    await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
   } else {
     await Firebase.initializeApp();
   }

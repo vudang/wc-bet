@@ -30,11 +30,16 @@ class FirebaseUserApi implements UserApi {
     return entries;
   }
 
-
   @override
   Future<void> create() async {
     final authUser = FirAuth.FirebaseAuth.instance.currentUser;
-    final user = User(userId: authUser?.uid, displayName: authUser?.displayName, email: authUser?.email, active: false);
+    final user = User(
+      amount: 0,
+      userId: authUser?.uid, 
+      displayName: authUser?.displayName ?? "", 
+      email: authUser?.email, 
+      active: false
+    );
     await ref.doc(authUser?.uid).set(user.toJson());
   }
 }

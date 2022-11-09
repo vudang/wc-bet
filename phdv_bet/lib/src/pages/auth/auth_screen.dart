@@ -9,6 +9,7 @@ import 'package:web_dashboard/src/auth/firebase.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/pages/auth/login_form.dart';
 import 'package:web_dashboard/src/pages/auth/register_form.dart';
+import 'package:web_dashboard/src/utils/utils.dart';
 import 'package:web_dashboard/src/widgets/app_confirm_popup.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/indicator.dart';
@@ -197,6 +198,12 @@ class _AuthFormState extends State<AuthForm> {
       _showError(message: "Please enter your email / password to SignIn");
       return;
     }
+
+    if (Utils.emailValidate(email.trim()) == false) {
+      _showError(message: "Please enter valid email");
+      return;
+    }
+
     _signIn(email, password);
   }
 
@@ -212,8 +219,18 @@ class _AuthFormState extends State<AuthForm> {
       return;
     }
 
+    if (Utils.emailValidate(email.trim()) == false) {
+      _showError(message: "Please enter valid email");
+      return;
+    }
+    
     if (password != confirmPassword) {
-      _showError(message: "Please check your password");
+      _showError(message: "Password are not matched, please check and try again!");
+      return;
+    }
+
+    if (password.length <= 6) {
+      _showError(message: "Your password too short, please create another one!");
       return;
     }
 
