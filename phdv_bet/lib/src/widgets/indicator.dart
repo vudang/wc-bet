@@ -5,7 +5,8 @@ import 'package:web_dashboard/src/color.dart';
 
 class Indicator {
   static Future? indicator;
-  static show(BuildContext context, {bool canDismiss = false, bool useSafeArea = true}) {
+  static show(BuildContext context,
+      {bool canDismiss = false, bool useSafeArea = true}) {
     hide(context); // hide first
     indicator = showDialog(
         context: context,
@@ -13,7 +14,8 @@ class Indicator {
         useSafeArea: useSafeArea,
         builder: (_) {
           // Prevent android device press system back button
-          return WillPopScope(child: const AppIndicator(), onWillPop: () async => false);
+          return WillPopScope(
+              child: const AppIndicator(), onWillPop: () async => false);
         });
   }
 
@@ -31,7 +33,7 @@ class AppIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: SystemColor.BLACK.withOpacity(0.6),
+      color: SystemColor.WHITE,
       child: Align(
           alignment: Alignment.center,
           child: Lottie.asset(
@@ -40,8 +42,7 @@ class AppIndicator extends StatelessWidget {
             reverse: true,
             width: 150,
             height: 150,
-          )
-      ),
+          )),
     );
   }
 }
