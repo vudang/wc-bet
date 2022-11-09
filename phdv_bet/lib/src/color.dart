@@ -8,4 +8,5 @@ class SystemColor {
   static const GREY_LIGHT = Color(0xFFB5B6BD);
   static const BLUE = Color(0xFF4C92E3);
   static const GREEN = Color(0xFF08671A);
+  static const YELLOW = Color.fromARGB(255, 234, 182, 118);
 }
