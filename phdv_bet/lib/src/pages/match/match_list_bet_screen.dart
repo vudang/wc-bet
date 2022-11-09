@@ -18,7 +18,6 @@ import 'package:web_dashboard/src/widgets/team_flag.dart';
 
 import '../../widgets/congratulations.dart';
 
-
 class MatchListAndBetScreen extends StatelessWidget {
   final List<FootballMatch> list;
   final List<Odd> odds;
@@ -26,7 +25,7 @@ class MatchListAndBetScreen extends StatelessWidget {
   final bool enableHeader;
   final String? title;
   final Function(FootballMatch)? onSelected;
-  
+
   MatchListAndBetScreen({
     super.key,
     this.enableHeader = false,
@@ -47,7 +46,12 @@ class MatchListAndBetScreen extends StatelessWidget {
     if (enableHeader) {
       return Scaffold(
         appBar: AppBar(
-          title: AppText("${title ?? ""}'s matches", color: SystemColor.WHITE, weight: FontWeight.w700, size: 20,),
+          title: AppText(
+            "${title ?? ""}'s matches",
+            color: SystemColor.WHITE,
+            weight: FontWeight.w700,
+            size: 20,
+          ),
         ),
         body: _matchList(list),
       );
@@ -64,12 +68,12 @@ class MatchListAndBetScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: _matchItem(match),
           );
-        }
-    );
+        });
   }
 
   Widget _matchItem(FootballMatch match) {
-    final odd = odds.firstWhere((element) => element.matchId == match.matchId, orElse: (() => Odd()));
+    final odd = odds.firstWhere((element) => element.matchId == match.matchId,
+        orElse: (() => Odd()));
     return ListTile(
       onTap: () {
         if (onSelected != null) {
@@ -89,7 +93,9 @@ class MatchListAndBetScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.sports_baseball_rounded, color: SystemColor.RED),
                   SizedBox(width: 10),
-                  AppText("(${match.matchId}) - Group ${match.group} - ${odd.amount} pts", color: SystemColor.RED)
+                  AppText(
+                      "(${match.matchId}) - Group ${match.group} - ${odd.amount} pts",
+                      color: SystemColor.RED)
                 ],
               ),
               SizedBox(height: 16),
@@ -99,28 +105,28 @@ class MatchListAndBetScreen extends StatelessWidget {
                   _homeTeam(match),
                   SizedBox(width: 10),
                   Visibility(
-                    visible: match.finished == false,
-                    child: AppText("VS", weight: FontWeight.w500, size: 20)
-                  ),
+                      visible: match.finished == false,
+                      child: AppText("VS", weight: FontWeight.w500, size: 20)),
                   Visibility(
                       visible: match.finished == true,
-                      child: AppText("${match.homeScore} : ${match.awayScore}", weight: FontWeight.w500, size: 20)),
+                      child: AppText("${match.homeScore} : ${match.awayScore}",
+                          weight: FontWeight.w500, size: 20)),
                   SizedBox(width: 10),
                   _awayTeam(match)
                 ],
               ),
               SizedBox(height: 16),
-              AppText(DateHelper.parseDateTime(input: match.localDate ?? "").toCurrentTimeZone()),
+              AppText(DateHelper.parseDateTime(input: match.localDate ?? "")
+                  .toCurrentTimeZone()),
               SizedBox(height: 16),
               _oddInfo(match),
-              SizedBox(height: 5),
+              SizedBox(height: 16),
               _placeBet(match),
             ],
           ),
         ),
       ),
     );
-
   }
 
   Widget _homeTeam(FootballMatch match) {
@@ -128,7 +134,8 @@ class MatchListAndBetScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          AppText(match.homeTeamEn ?? "", size: 18, color: SystemColor.BLACK, weight: FontWeight.w500),
+          AppText(match.homeTeamEn ?? "",
+              size: 18, color: SystemColor.BLACK, weight: FontWeight.w500),
           SizedBox(width: 10),
           TeamFag(url: match.homeFlag ?? "")
         ],
@@ -150,77 +157,89 @@ class MatchListAndBetScreen extends StatelessWidget {
   }
 
   Widget _oddInfo(FootballMatch match) {
-    final odd = odds.firstWhere((element) => element.matchId == match.matchId && element.matchId != null, orElse: () => Odd());
+    final odd = odds.firstWhere(
+        (element) =>
+            element.matchId == match.matchId && element.matchId != null,
+        orElse: () => Odd());
     if (odd.matchId == null) {
-      return AppText("Missing odds", fontStyle: FontStyle.italic, color: SystemColor.GREY_LIGHT);
+      return AppText("Missing odds", color: SystemColor.RED);
     }
-    return AppText("${odd.desciption ?? ""}", fontStyle: FontStyle.italic, color: SystemColor.GREY_LIGHT);
+    return AppText("${odd.desciption ?? ""}", color: SystemColor.RED);
   }
 
   Widget _placeBet(FootballMatch match) {
-    final odd = odds.firstWhere((element) => element.matchId == match.matchId && element.matchId != null, orElse: () => Odd());
+    final odd = odds.firstWhere(
+        (element) =>
+            element.matchId == match.matchId && element.matchId != null,
+        orElse: () => Odd());
     if (odd.matchId == null) {
       return Container();
     }
 
-    final mybet = userBets.firstWhere((element) => element.matchId == match.matchId, orElse: (() => Bet()));
+    final mybet = userBets.firstWhere(
+        (element) => element.matchId == match.matchId,
+        orElse: (() => Bet()));
     final hadBet = mybet.matchId != null;
-    final state = hadBet || match.finished == true ? AppButtonState.disable : AppButtonState.normal;
+    final state = hadBet || match.finished == true
+        ? AppButtonState.disable
+        : AppButtonState.normal;
     final isChooseHome = hadBet && mybet.teamChoosed.isHome;
     final isChooseAway = hadBet && mybet.teamChoosed.isAway;
-    final textColor = state == AppButtonState.disable ? SystemColor.BLACK : SystemColor.WHITE;
+    final textColor =
+        state == AppButtonState.disable ? SystemColor.BLACK : SystemColor.WHITE;
 
     return Row(
       children: [
         Expanded(
-          child: AppSystemRegularButton(
-            state: state,
-            customTextColor: textColor,
-            text: "👍 ${match.homeTeamEn}",
-            customTextSize: 14,
-            customDisableColor: isChooseHome ? SystemColor.RED.withOpacity(0.2) : SystemColor.GREY_LIGHT.withOpacity(0.2),
-            onPressed: (() => _selectedOdds(TeamType.home(), odd))
-          )
-        ),
+            child: AppSystemRegularButton(
+                state: state,
+                customTextColor: textColor,
+                text: "👍 ${match.homeTeamEn}",
+                customTextSize: 14,
+                customDisableColor: isChooseHome
+                    ? SystemColor.RED.withOpacity(0.2)
+                    : SystemColor.GREY_LIGHT.withOpacity(0.2),
+                onPressed: (() => _selectedOdds(TeamType.home(), odd)))),
         SizedBox(width: 20),
         Expanded(
-          child: AppSystemRegularButton(
-            state: state,
-            customTextColor: textColor,
-            text: "👍 ${match.awayTeamEn}", 
-            customTextSize: 14,
-            customDisableColor: isChooseAway ? SystemColor.RED.withOpacity(0.2) : SystemColor.GREY_LIGHT.withOpacity(0.2),
-            onPressed: (() => _selectedOdds(TeamType.away(), odd))
-          )
-        ),
+            child: AppSystemRegularButton(
+                state: state,
+                customTextColor: textColor,
+                text: "👍 ${match.awayTeamEn}",
+                customTextSize: 14,
+                customDisableColor: isChooseAway
+                    ? SystemColor.RED.withOpacity(0.2)
+                    : SystemColor.GREY_LIGHT.withOpacity(0.2),
+                onPressed: (() => _selectedOdds(TeamType.away(), odd)))),
       ],
     );
   }
 
   _selectedOdds(TeamType teamType, Odd odd) {
-    final chooseTeam = (teamType.isHome ? odd.teamHome : odd.teamAway)?.toLowerCase();
+    final chooseTeam =
+        (teamType.isHome ? odd.teamHome : odd.teamAway)?.toLowerCase();
     final dialog = AppConfirmPopup(
-          title: "Are you sure with your decision?",
-          message: "When you press `BET $chooseTeam` button, you won't have second chance :D",
-          positiveButton: "BET $chooseTeam",
-          negativeButton: "Cancel",
-          onNegativePressed: () {
-            Navigator.of(_context).pop();
-          },
-          onPositivePressed: () {
-            Navigator.of(_context).pop();
-            _onPlaceBet(teamType, odd);
-          },
-        );
-        
+      title: "Are you sure with your decision?",
+      message:
+          "When you press `BET $chooseTeam` button, you won't have second chance :D",
+      positiveButton: "BET $chooseTeam",
+      negativeButton: "Cancel",
+      onNegativePressed: () {
+        Navigator.of(_context).pop();
+      },
+      onPositivePressed: () {
+        Navigator.of(_context).pop();
+        _onPlaceBet(teamType, odd);
+      },
+    );
+
     showCupertinoModalPopup(
         context: _context,
         barrierColor: SystemColor.BLACK.withOpacity(0.8),
         builder: (_) {
           return dialog;
-    });
+        });
   }
-        
 
   _onPlaceBet(TeamType teamType, Odd odd) async {
     Indicator.show(_context);

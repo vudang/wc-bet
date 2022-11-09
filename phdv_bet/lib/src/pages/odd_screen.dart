@@ -35,39 +35,41 @@ class OddScreen extends StatelessWidget {
     _oddApi = Provider.of<AppState>(context).api?.oddApi;
     return Scaffold(
       body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              expandedHeight: 300.0,
-              floating: false,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: AppText("${match.homeTeamEn} vs ${match.awayTeamEn}", color: SystemColor.WHITE, weight: FontWeight.w700, size: 16,),
-                  background: Stack(
-                    children: [
-                      Positioned.fill(child: _header(context)),
-                      Positioned(
-                        bottom: 70, left: 10, right: 10,
-                        child: _matchInfo(context),
-                      )
-                    ],
-                  )
-            ),)
-          ];
-        },
-        body: Padding(
-          padding: EdgeInsets.all(5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _odds(context),
-                SizedBox(height: 30),
-                _referenceBet()
-              ],
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 300.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: true,
+                    title: AppText(
+                      "${match.homeTeamEn} vs ${match.awayTeamEn}",
+                      color: SystemColor.WHITE,
+                      weight: FontWeight.w700,
+                      size: 16,
+                    ),
+                    background: Stack(
+                      children: [
+                        Positioned.fill(child: _header(context)),
+                        Positioned(
+                          bottom: 70,
+                          left: 10,
+                          right: 10,
+                          child: _matchInfo(context),
+                        )
+                      ],
+                    )),
+              )
+            ];
+          },
+          body: Padding(
+            padding: EdgeInsets.all(5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [_odds(context), SizedBox(height: 30), _referenceBet()],
             ),
-        )
-      ),
+          )),
     );
   }
 
@@ -82,8 +84,9 @@ class OddScreen extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        
-        final imageUrl = snapshot.data?.stadiumUrl ?? "https://firebasestorage.googleapis.com/v0/b/worldbet-aaa29.appspot.com/o/banner%2Fbanner_01.png?alt=media&token=b3ddd7e2-0355-4c21-b6e9-fe0f68afd085";
+
+        final imageUrl = snapshot.data?.stadiumUrl ??
+            "https://firebasestorage.googleapis.com/v0/b/worldbet-aaa29.appspot.com/o/banner%2Fbanner_01.png?alt=media&token=b3ddd7e2-0355-4c21-b6e9-fe0f68afd085";
         return CachedNetworkImage(
           imageUrl: imageUrl,
           cacheKey: imageUrl,
@@ -109,7 +112,13 @@ class OddScreen extends StatelessWidget {
               children: [
                 _homeTeam(match),
                 SizedBox(width: 10),
-                AppText(match.finished == true ? "${match.homeScore} : ${match.awayScore}" : "VS", weight: FontWeight.w500, size: 20, color: SystemColor.WHITE),
+                AppText(
+                    match.finished == true
+                        ? "${match.homeScore} : ${match.awayScore}"
+                        : "VS",
+                    weight: FontWeight.w500,
+                    size: 20,
+                    color: SystemColor.WHITE),
                 SizedBox(width: 10),
                 _awayTeam(match)
               ],
@@ -130,7 +139,8 @@ class OddScreen extends StatelessWidget {
         children: [
           TeamFag(url: match.homeFlag ?? ""),
           SizedBox(width: 20),
-          AppText(match.homeTeamEn ?? "", size: 18, color: SystemColor.WHITE, weight: FontWeight.w500),
+          AppText(match.homeTeamEn ?? "",
+              size: 18, color: SystemColor.WHITE, weight: FontWeight.w500),
         ],
       ),
     );
@@ -142,7 +152,8 @@ class OddScreen extends StatelessWidget {
         children: [
           TeamFag(url: match.awayFlag ?? ""),
           SizedBox(width: 10),
-          AppText(match.awayTeamEn ?? "", size: 18, color: SystemColor.WHITE, weight: FontWeight.w500),
+          AppText(match.awayTeamEn ?? "",
+              size: 18, color: SystemColor.WHITE, weight: FontWeight.w500),
         ],
       ),
     );
@@ -155,7 +166,12 @@ class OddScreen extends StatelessWidget {
         final odds = snapshot.data;
         if (odds == null) {
           return const Center(
-            child: AppText("Odds for this match is not available at the moment. Please check back later."),
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: AppText(
+                  "Odds for this match is not available at the moment. Please check back later.",
+                  color: SystemColor.RED),
+            ),
           );
         }
 
@@ -164,7 +180,8 @@ class OddScreen extends StatelessWidget {
         return Card(
           child: Padding(
             padding: EdgeInsets.all(16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               AppText("Place your bet", weight: FontWeight.bold),
               SizedBox(height: 20),
               Row(
@@ -175,9 +192,8 @@ class OddScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20),
-              AppText("${odds.desciption ?? ""}",
-                  fontStyle: FontStyle.italic, color: SystemColor.GREY_LIGHT),
-              SizedBox(height: 5),
+              AppText("${odds.desciption ?? ""}", color: SystemColor.RED),
+              SizedBox(height: 2),
               _myBetInfo()
             ]),
           ),
@@ -189,39 +205,40 @@ class OddScreen extends StatelessWidget {
   Widget _oddsItemView(Odd odds, bool isHome, BuildContext context) {
     final text = isHome ? odds.homePrefix : odds.awayPrefix;
     return StreamBuilder<Bet?>(
-      stream: _betApi?.getMyBet(odds.matchId!),
-      builder: (ctx, snapshots) {
-        final alreadyBet = snapshots.data != null;
-        final isExpired = odds.isLock == true;
-        final canBet = alreadyBet == false && isExpired == false;
-        var color = canBet ? SystemColor.RED : SystemColor.GREY_LIGHT.withAlpha(20);
-        final txtcolor = canBet
-              ? SystemColor.WHITE
-              : SystemColor.BLACK;
-        if (alreadyBet) {
-          final isBetHome = snapshots.data?.teamChoosed.isHome == true;
-          if (isBetHome && isHome) {
-            color = SystemColor.RED.withOpacity(0.2);
+        stream: _betApi?.getMyBet(odds.matchId!),
+        builder: (ctx, snapshots) {
+          final alreadyBet = snapshots.data != null;
+          final isExpired = odds.isLock == true;
+          final canBet = alreadyBet == false && isExpired == false;
+          var color =
+              canBet ? SystemColor.RED : SystemColor.GREY_LIGHT.withAlpha(20);
+          final txtcolor = canBet ? SystemColor.WHITE : SystemColor.BLACK;
+          if (alreadyBet) {
+            final isBetHome = snapshots.data?.teamChoosed.isHome == true;
+            if (isBetHome && isHome) {
+              color = SystemColor.RED.withOpacity(0.2);
+            }
+            if (!isBetHome && !isHome) {
+              color = SystemColor.RED.withOpacity(0.2);
+            }
           }
-          if (!isBetHome && !isHome) {
-            color = SystemColor.RED.withOpacity(0.2);
-          }
-        }
 
-        final flag = isHome ? match.homeFlag : match.awayFlag;
-        final teamName = isHome ? match.homeTeamEn : match.awayTeamEn;
+          final flag = isHome ? match.homeFlag : match.awayFlag;
+          final teamName = isHome ? match.homeTeamEn : match.awayTeamEn;
 
-        return Expanded(
-          child: GestureDetector(
-            onTap: () => canBet == false ? null : _selectedOdds(odds, isHome, context),
-            child: Container(
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: color,
-              ),
-              child: Center(
-                  child: Row(
+          return Expanded(
+            child: GestureDetector(
+                onTap: () => canBet == false
+                    ? null
+                    : _selectedOdds(odds, isHome, context),
+                child: Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: color,
+                  ),
+                  child: Center(
+                      child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // TeamFag(url: flag ?? ""),
@@ -229,16 +246,11 @@ class OddScreen extends StatelessWidget {
                       AppText("Choose $teamName",
                           size: 17, weight: FontWeight.w500, color: txtcolor)
                     ],
-                  )
-                  
-              ),
-            )
-          ),
-        );
-      }
-    );
+                  )),
+                )),
+          );
+        });
   }
-
 
   Widget _myBetInfo() {
     return StreamBuilder<Bet?>(
@@ -247,10 +259,11 @@ class OddScreen extends StatelessWidget {
           final alreadyBet = snapshots.data != null;
           final isHome = snapshots.data?.teamChoosed.isHome == true;
           final teamName = isHome ? match.homeTeamEn : match.awayTeamEn;
-          
+
           return Visibility(
             visible: alreadyBet,
-            child: AppText("You bet '$teamName'", color: SystemColor.RED.withOpacity(0.6)),
+            child: AppText("You bet '$teamName'",
+                color: SystemColor.RED.withOpacity(0.6)),
           );
         });
   }
@@ -258,14 +271,11 @@ class OddScreen extends StatelessWidget {
   Widget _referenceBet() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppText("References", weight: FontWeight.bold),
-          _referenceChooseHome(),
-          _referenceChooseAway()
-        ]
-      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        AppText("References", weight: FontWeight.bold),
+        _referenceChooseHome(),
+        _referenceChooseAway()
+      ]),
     );
   }
 
@@ -280,7 +290,7 @@ class OddScreen extends StatelessWidget {
     );
   }
 
-   Widget _referenceChooseAway() {
+  Widget _referenceChooseAway() {
     return Card(
       child: ListTile(
         leading: TeamFag(url: match.awayFlag ?? ""),
@@ -290,35 +300,36 @@ class OddScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   _selectedOdds(Odd odds, bool isHome, BuildContext context) {
     final chooseTeam = (isHome ? odds.teamHome : odds.teamAway)?.toLowerCase();
     final dialog = AppConfirmPopup(
-          title: "Are you sure with your decision?",
-          message: "When you press `BET $chooseTeam` button, you won't have second chance :D",
-          positiveButton: "BET $chooseTeam",
-          negativeButton: "Cancel",
-          onNegativePressed: () {
-            Navigator.of(context).pop();
-          },
-          onPositivePressed: () {
-            Navigator.of(context).pop();
-            if (isHome) {
-              _placeBet(TeamType.home());
-            } else {
-              _placeBet(TeamType.away());
-            }
-          },
-        );
-        
+      title: "Are you sure with your decision?",
+      message:
+          "When you press `BET $chooseTeam` button, you won't have second chance :D",
+      positiveButton: "BET $chooseTeam",
+      negativeButton: "Cancel",
+      onNegativePressed: () {
+        Navigator.of(context).pop();
+      },
+      onPositivePressed: () {
+        Navigator.of(context).pop();
+        if (isHome) {
+          _placeBet(TeamType.home());
+        } else {
+          _placeBet(TeamType.away());
+        }
+      },
+    );
+
     showCupertinoModalPopup(
-      context: context,
-      barrierColor: SystemColor.BLACK.withOpacity(0.8),
-      builder: (_) {
-        return dialog;
-    });
+        context: context,
+        barrierColor: SystemColor.BLACK.withOpacity(0.8),
+        builder: (_) {
+          return dialog;
+        });
   }
-  
+
   _selectedHomeRef() {
     showCupertinoModalPopup(
         context: _context,
@@ -344,22 +355,21 @@ class OddScreen extends StatelessWidget {
 
     Indicator.show(_context);
     await _betApi?.placeBet(Bet(
-      amount: _odd?.amount,
-      choosedTeam: teamType.type,
-      userId: FirebaseAuth.instance.currentUser?.uid,
-      matchId: _odd?.matchId
-    ));
+        amount: _odd?.amount,
+        choosedTeam: teamType.type,
+        userId: FirebaseAuth.instance.currentUser?.uid,
+        matchId: _odd?.matchId));
     Indicator.hide(_context);
     _showBetSuccessful();
   }
 
   _showBetSuccessful() {
-      showCupertinoModalPopup(
+    showCupertinoModalPopup(
         context: _context,
         builder: (ctx) {
           return Congratulations(completed: () {
             Navigator.of(ctx).pop();
           });
-      });
+        });
   }
 }
