@@ -171,7 +171,7 @@ class MatchScreen extends StatelessWidget {
 
   Widget _matchToday(List<FootballMatch> matches, List<Odd> odds, List<Bet> myBets, BuildContext context) {
     final comming = matches.where((match) {
-      return (match.date?.millisecondsSinceEpoch ?? 0) < DateTime.now().millisecondsSinceEpoch + 86400000;
+      return match.finished == false && (match.date?.millisecondsSinceEpoch ?? 0) < DateTime.now().millisecondsSinceEpoch + 86400000;
     });
     if (comming.isEmpty) {
       return _emptyView();
@@ -186,7 +186,8 @@ class MatchScreen extends StatelessWidget {
 
 
   Widget _matchComming(List<FootballMatch> matches, List<Odd> odds, List<Bet> myBets, BuildContext context) {
-    final comming = matches.where((element) => element.finished == false);
+    final comming = matches.where((match) => match.finished == false && 
+      (match.date?.millisecondsSinceEpoch ?? 0) >= DateTime.now().millisecondsSinceEpoch + 86400000);
     return MatchListAndBetScreen(
       list: comming.toList(),
       odds: odds,
