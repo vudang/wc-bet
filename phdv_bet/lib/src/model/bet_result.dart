@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:web_dashboard/src/model/bet.dart';
 import 'package:web_dashboard/src/model/user.dart';
 
-enum BetResulttype { lose, win }
+enum BetResulttype { lose, win, waiting }
 
 class BetResult {
   final Bet bet;
@@ -15,8 +15,16 @@ class BetResult {
     return result == BetResulttype.lose;
   }
 
+  bool get isWon {
+    return result == BetResulttype.win;
+  }
+
   bool get isMissing {
-    return bet.choosedTeam == null;
+    return result != BetResulttype.waiting && bet.choosedTeam == null;
+  }
+
+  bool get isWaiting {
+    return result == BetResulttype.waiting;
   }
 
   String get toValueString {
@@ -26,7 +34,10 @@ class BetResult {
     if (isLoose) {
       return "Lost";
     }
-    return "Won";
+    if (isWon) {
+      return "Won";
+    }
+    return "Waiting";
   }
 }
 

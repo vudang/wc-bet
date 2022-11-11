@@ -38,4 +38,24 @@ class BetHelper {
 
     return UserBet(user, userBetsResult);
   }
+
+  /// Lấy kết danh sách các trận bet của user mà chưa đá xong
+  static UserBet getUserBetDoesNotPlay({
+    required User user,
+    required List<Bet> bets,
+    required List<FootballMatch> matchs}) {
+
+    /// Trong tất cả các trận, lấy danh sách các trận đã đặt cược của người chơi
+    final matchNotPlays = matchs.where((element) => element.finished == false);
+    final List<Bet> userBets = matchNotPlays.map((m) {
+      final bet = bets.firstWhere((b) => b.matchId == m.matchId && b.userId == user.userId, orElse: () => Bet());
+      return bet;
+    }).toList();
+    userBets.removeWhere((element) => element.matchId == null);
+
+    final betResults = userBets.map((e) => BetResult(e, BetResulttype.waiting)).toList();
+
+    return UserBet(user, betResults);
+  }
 }
+
