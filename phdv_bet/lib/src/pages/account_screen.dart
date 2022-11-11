@@ -15,7 +15,7 @@ enum AccountMenu {
 }
 
 class AccountScreen extends StatelessWidget {
-  final _listMenus = [AccountMenu.profile, AccountMenu.standing, AccountMenu.rule, AccountMenu.help];
+  final _listMenus = [AccountMenu.standing, AccountMenu.rule, AccountMenu.help];
   late BuildContext _context;
   UserApi? _userApi;
   ConfigApi? _configApi;

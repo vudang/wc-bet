@@ -49,6 +49,7 @@ class _LoginFormState extends State<LoginForm> {
                       controller: _emailController,
                       placeholder: "abc@bet.com",
                       textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (value) => _signInPressed(),
                       textInputType: TextInputType.emailAddress),
                   SizedBox(height: 20),
                   AppText("Password"),
@@ -57,6 +58,7 @@ class _LoginFormState extends State<LoginForm> {
                     controller: _passwordController,
                     placeholder: "******",
                     obscureText: _isSecurePassword,
+                    onFieldSubmitted: (value) => _signInPressed(),
                     suffixIcon: IconButton(
                       icon: _isSecurePassword
                           ? Icon(CupertinoIcons.eye_solid,

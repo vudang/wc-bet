@@ -34,24 +34,26 @@ class AppConfirmPopup extends StatelessWidget {
             topRight: Radius.circular(20)),
         color: SystemColor.WHITE,
       ),
-      height: 300,
-      width: min(MediaQuery.of(context).size.width, 400),
-      child: Material(child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppText(title,
+      width: min(MediaQuery.of(context).size.width, 640),
+      child: Material(
+        color: Colors.transparent,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppText(title,
+                color: SystemColor.BLACK,
+                size: 24,
+                weight: FontWeight.w700),
+            SizedBox(height: 20),
+            AppText(message,
               color: SystemColor.BLACK,
-              size: 24,
-              weight: FontWeight.w700),
-          SizedBox(height: 20),
-          AppText(message,
-            color: SystemColor.BLACK,
-            size: 18,
-            weight: FontWeight.w500),
-          SizedBox(height: 60),
-          _buttons()
-          
-        ],
+              size: 18,
+              weight: FontWeight.w500),
+            SizedBox(height: 60),
+            _buttons()
+            
+          ],
       ))
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/src/color.dart';
+import 'package:web_dashboard/src/pages/account_detail_screen.dart';
 import 'package:web_dashboard/src/pages/account_screen.dart';
 import 'package:web_dashboard/src/pages/ranking_screen.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
@@ -40,7 +41,8 @@ class _HomePageState extends State<HomePage> {
       destinations: const [
         AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
         AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
-        AdaptiveScaffoldDestination(title: 'Info', icon: Icons.info)
+        AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
+        AdaptiveScaffoldDestination(title: 'More', icon: Icons.more_rounded)
       ],
       body: _pageAtIndex(_pageIndex),
       onNavigationIndexChange: (newIndex) {
@@ -90,9 +92,9 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (index == 2) {
-      return AccountScreen();
+      return AccountDetailScreen();
     }
-
-    return const Center(child: Text('Settings'));
+    
+    return AccountScreen();
   }
 }

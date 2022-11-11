@@ -13,7 +13,6 @@ class Indicator {
         barrierDismissible: canDismiss,
         useSafeArea: useSafeArea,
         builder: (_) {
-          // Prevent android device press system back button
           return WillPopScope(
               child: const AppIndicator(), onWillPop: () async => false);
         });
@@ -33,7 +32,7 @@ class AppIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: SystemColor.WHITE,
+      color: SystemColor.BLACK.withOpacity(0.4),
       child: Align(
           alignment: Alignment.center,
           child: Lottie.asset(

@@ -143,7 +143,7 @@ class MatchScreen extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        print("List of odd: ${odds.length}");
+
         return _machesWidget(matches, odds, myBets, context);
       },
     );

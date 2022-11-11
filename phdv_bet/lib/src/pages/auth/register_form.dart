@@ -51,6 +51,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       controller: _emailController,
                       placeholder: "abc@bet.com",
                       textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (value) => _registerPressed(),
                       textInputType: TextInputType.emailAddress),
                   SizedBox(height: 20),
                   AppText("Password"),
@@ -59,6 +60,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     controller: _passwordController,
                     placeholder: "******",
                     obscureText: _isSecurePassword,
+                    onFieldSubmitted: (value) => _registerPressed(),
                     suffixIcon: IconButton(
                       icon: _isSecurePassword
                           ? Icon(CupertinoIcons.eye_solid,
@@ -77,6 +79,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     controller: _passwordConfirmController,
                     placeholder: "******",
                     obscureText: _isSecureConfirmPassword,
+                    onFieldSubmitted: (value) => _registerPressed(),
                     suffixIcon: IconButton(
                       icon: _isSecureConfirmPassword
                           ? Icon(CupertinoIcons.eye_solid,

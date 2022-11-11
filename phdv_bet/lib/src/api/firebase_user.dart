@@ -11,9 +11,7 @@ class FirebaseUserApi implements UserApi {
 
   @override
   Future<User?> get(String userId) async {
-    print("Firebase get user => ${userId}");
     final querySnapshot = await ref.where("localId", isEqualTo: userId).get();
-    print("Firebase get user => ${querySnapshot.docs.length}");
     final odds = querySnapshot.docs.map((doc) => User.fromJson(doc.data()));
     if (odds.isNotEmpty) {
       return odds.first;
@@ -38,7 +36,8 @@ class FirebaseUserApi implements UserApi {
       userId: authUser?.uid, 
       displayName: authUser?.displayName ?? "", 
       email: authUser?.email, 
-      active: false
+      active: false,
+      photoUrl: ""
     );
     await ref.doc(authUser?.uid).set(user.toJson());
   }

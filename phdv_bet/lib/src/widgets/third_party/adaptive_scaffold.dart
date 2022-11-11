@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:web_dashboard/src/color.dart';
 
 bool _isLargeScreen(BuildContext context) {
   return MediaQuery.of(context).size.width > 960.0;
@@ -124,7 +125,8 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
         items: [
           ...widget.destinations.map(
             (d) => BottomNavigationBarItem(
-              icon: Icon(d.icon),
+              icon: Icon(d.icon, color: SystemColor.GREY_LIGHT),
+              activeIcon: Icon(d.icon, color: SystemColor.RED),
               label: d.title,
             ),
           ),

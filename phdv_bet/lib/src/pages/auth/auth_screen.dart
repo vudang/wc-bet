@@ -2,15 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart' as FirebaseAuthen;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:web_dashboard/src/api/api.dart';
-import 'package:web_dashboard/src/app.dart';
 import 'package:web_dashboard/src/auth/firebase.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/pages/auth/login_form.dart';
 import 'package:web_dashboard/src/pages/auth/register_form.dart';
 import 'package:web_dashboard/src/utils/utils.dart';
-import 'package:web_dashboard/src/widgets/app_confirm_popup.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/indicator.dart';
 import '../../assets.dart';
@@ -90,6 +87,8 @@ class _AuthFormState extends State<AuthForm> {
       Indicator.hide(context);
       if (user != null) {
         _checkUserAuth(user);
+      } else {
+        _showError(message: "Incorrect username or password. Please check and try again!");
       }
     } on SignInException {
       Indicator.hide(context);
@@ -116,9 +115,7 @@ class _AuthFormState extends State<AuthForm> {
 
 
   Future<bool> _checkUserAuth(User user) async {
-    print("Check User active: ${user.uid} => ");
     final appUser = await widget.userApi.get(user.uid);
-    print("User active: ${appUser?.toJson()} => ${appUser?.active}");
     if ((appUser?.active ?? false) == false) {
       showCupertinoDialog(
         context: context,
@@ -131,7 +128,12 @@ class _AuthFormState extends State<AuthForm> {
                 width: 100,
                 child: AppSystemRegularButton(
                     text: "Got it",
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        _showRegister = false;
+                      });
+                    },
                     customColor: Colors.transparent,
                     customTextColor: SystemColor.RED,
                 ),
@@ -229,7 +231,7 @@ class _AuthFormState extends State<AuthForm> {
       return;
     }
 
-    if (password.length <= 6) {
+    if (password.length < 6) {
       _showError(message: "Your password too short, please create another one!");
       return;
     }
