@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web_dashboard/src/api/api.dart';
 import 'package:web_dashboard/src/color.dart';
@@ -12,6 +14,7 @@ import 'package:web_dashboard/src/utils/screen_helper.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import '../app.dart';
 import '../widgets/third_party/adaptive_scaffold.dart';
+import 'download_app_screen.dart';
 import 'help_screen.dart';
 import 'match/match_screen.dart';
 
@@ -30,6 +33,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _pageIndex = 0;
   ConfigApi? _configApi;
+
+  @override
+  void initState() {
+    _requestPushNotification();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +157,7 @@ class _HomePageState extends State<HomePage> {
       return Container();
     }
 
-    return AccountScreen();
+    return DownloadAppScreen();
   }
 
 
@@ -166,5 +175,21 @@ class _HomePageState extends State<HomePage> {
     if (!await launchUrl(_url)) {
       throw 'Could not launch $_url';
     }
+  }
+
+  _requestPushNotification() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 }

@@ -8,7 +8,9 @@ class Config {
     this.homeBannerUrl,
     this.stadiumUrl,
     this.helpUrl,
-    this.ruleUrl
+    this.ruleUrl,
+    this.iosDownloadLink,
+    this.androidDownloadLink
   });
 
   @JsonKey(name: "home_banner_url")
@@ -22,6 +24,12 @@ class Config {
 
   @JsonKey(name: "rule_url")
   final String? ruleUrl;
+
+  @JsonKey(name: "android_download_link")
+  final String? androidDownloadLink;
+
+  @JsonKey(name: "ios_download_link")
+  final String? iosDownloadLink;
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigToJson(this);
