@@ -122,7 +122,7 @@ class _AuthFormState extends State<AuthForm> {
         builder: (ctx) {
           return AlertDialog(
             title: AppText("Unlock your account", weight: FontWeight.w700),
-            content: AppText("Please waitting or contact to admin to active your account :p"),
+            content: AppText("Please wait or contact to admin to activate your account :p"),
             actions: [
               SizedBox(
                 width: 100,

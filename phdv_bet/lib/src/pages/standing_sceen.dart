@@ -8,6 +8,7 @@ import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/indicator.dart';
 import 'package:web_dashboard/src/widgets/team_flag.dart';
 
+import '../utils/screen_helper.dart';
 import 'match/match_list_screen.dart';
 
 class StandingPage extends StatefulWidget {
@@ -37,7 +38,12 @@ class _StandingPageState extends State<StandingPage> {
     );
   }
 
+
   AppBar? _appBar(BuildContext context) {
+    if (ScreenHelper.isLargeScreen(context)) {
+      return null;
+    }
+    
     return AppBar(
         title: AppText("Standing",
             size: 20, weight: FontWeight.w700, color: SystemColor.WHITE));

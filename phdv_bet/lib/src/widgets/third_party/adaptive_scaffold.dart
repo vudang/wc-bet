@@ -17,10 +17,12 @@ bool _isMediumScreen(BuildContext context) {
 class AdaptiveScaffoldDestination {
   final String title;
   final IconData icon;
+  final List<AdaptiveScaffoldDestination> subMenus;
 
   const AdaptiveScaffoldDestination({
     required this.title,
     required this.icon,
+    this.subMenus = const []
   });
 }
 

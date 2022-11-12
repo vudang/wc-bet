@@ -1,11 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:web_dashboard/src/api/api.dart';
 import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/pages/account_detail_screen.dart';
 import 'package:web_dashboard/src/pages/account_screen.dart';
 import 'package:web_dashboard/src/pages/ranking_screen.dart';
+import 'package:web_dashboard/src/pages/standing_sceen.dart';
+import 'package:web_dashboard/src/utils/screen_helper.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
+import '../app.dart';
 import '../widgets/third_party/adaptive_scaffold.dart';
+import 'help_screen.dart';
 import 'match/match_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,9 +29,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _pageIndex = 0;
+  ConfigApi? _configApi;
 
   @override
   Widget build(BuildContext context) {
+    final api = Provider.of<AppState>(context).api;
+    _configApi = api?.configApi;
+    
+    final isWeb = ScreenHelper.isLargeScreen(context);
+    final menus = isWeb  ? const [
+        AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
+        AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
+        AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
+        AdaptiveScaffoldDestination(title: 'Standing', icon: Icons.table_chart),
+        AdaptiveScaffoldDestination(title: 'Game Rules', icon: Icons.rule),
+        AdaptiveScaffoldDestination(title: 'How to play?', icon: Icons.help)
+      ] :
+      const [
+        AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
+        AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
+        AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
+        AdaptiveScaffoldDestination(title: 'More', icon: Icons.more_rounded)
+      ];
+
     return AdaptiveScaffold(
       title: const AppText('PH 88', color: SystemColor.WHITE, weight: FontWeight.w700, size: 22,),
       actions: [
@@ -38,13 +65,8 @@ class _HomePageState extends State<HomePage> {
         )
       ],
       currentIndex: _pageIndex,
-      destinations: const [
-        AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
-        AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
-        AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
-        AdaptiveScaffoldDestination(title: 'More', icon: Icons.more_rounded)
-      ],
-      body: _pageAtIndex(_pageIndex),
+      destinations: menus,
+      body: isWeb ? _webPageAtIndex(_pageIndex) : _mobilePageAtIndex(_pageIndex),
       onNavigationIndexChange: (newIndex) {
         setState(() {
           _pageIndex = newIndex;
@@ -82,7 +104,7 @@ class _HomePageState extends State<HomePage> {
     widget.onSignOut();
   }
 
-  static Widget _pageAtIndex(int index) {
+  static Widget _mobilePageAtIndex(int index) {
     if (index == 0) {
       return MatchScreen();
     }
@@ -96,5 +118,52 @@ class _HomePageState extends State<HomePage> {
     }
     
     return AccountScreen();
+  }
+
+  Widget _webPageAtIndex(int index) {
+    if (index == 0) {
+      return MatchScreen();
+    }
+
+    if (index == 1) {
+      return RankingScreen();
+    }
+
+    if (index == 2) {
+      return AccountDetailScreen();
+    }
+
+    if (index == 3) {
+      return StandingPage();
+    }
+
+    if (index == 4) {
+      _gotoRules();
+      return Container();
+    }
+
+    if (index == 5) {
+      _gotoHelp();
+      return Container();
+    }
+
+    return AccountScreen();
+  }
+
+
+  _gotoRules() async {
+    final config = await _configApi?.get();
+    Uri _url = Uri.parse(config?.ruleUrl ?? "");
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
+  }
+
+  _gotoHelp() async {
+    final config = await _configApi?.get();
+    Uri _url = Uri.parse(config?.helpUrl ?? "");
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
   }
 }
