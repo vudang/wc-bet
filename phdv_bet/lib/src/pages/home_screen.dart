@@ -43,7 +43,8 @@ class _HomePageState extends State<HomePage> {
         AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
         AdaptiveScaffoldDestination(title: 'Standing', icon: Icons.table_chart),
         AdaptiveScaffoldDestination(title: 'Game Rules', icon: Icons.rule),
-        AdaptiveScaffoldDestination(title: 'How to play?', icon: Icons.help)
+        AdaptiveScaffoldDestination(title: 'How to play?', icon: Icons.help),
+        AdaptiveScaffoldDestination(title: 'Download Mobile App?', icon: Icons.install_mobile)
       ] :
       const [
         AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),

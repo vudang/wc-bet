@@ -109,14 +109,18 @@ class AccountScreen extends StatelessWidget {
 
   _gotoRules() async {
     final config = await _configApi?.get();
-    Uri _url = Uri.parse(config?.helpUrl ?? "");
+    Uri _url = Uri.parse(config?.ruleUrl ?? "");
     if (!await launchUrl(_url)) {
       throw 'Could not launch $_url';
     }
   }
   
-  _gotoHelp() {
-
+  _gotoHelp() async {
+    final config = await _configApi?.get();
+    Uri _url = Uri.parse(config?.helpUrl ?? "");
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
   }
   
 }
