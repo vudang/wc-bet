@@ -21,7 +21,7 @@ class FirebaseUserApi implements UserApi {
 
   @override
   Future<List<User>> list() async {
-    final querySnapshot = await ref.get();
+    final querySnapshot = await ref.where("active", isEqualTo:true).get();
     final entries = querySnapshot.docs
         .map((doc) => User.fromJson(doc.data()))
         .toList();

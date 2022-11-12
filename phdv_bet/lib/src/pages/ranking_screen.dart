@@ -10,6 +10,7 @@ import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/model/user.dart';
 import 'package:web_dashboard/src/pages/user_bet_screen.dart';
 import 'package:web_dashboard/src/utils/bet_helper.dart';
+import 'package:web_dashboard/src/widgets/app_network_image.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 
 import '../assets.dart';
@@ -167,15 +168,8 @@ class _RankingScreenState extends State<RankingScreen> {
     return CircleAvatar(
         backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
         radius: 20,
-        child: url.isNotEmpty
-            ? CachedNetworkImage(
-                imageUrl: url,
-                cacheKey: url,
-                filterQuality: FilterQuality.low,
-                memCacheWidth: PHOTO_COMPRESS_SIZE,
-                maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
-                fit: BoxFit.cover)
-            : Image.asset(Assets.icons.ic_unknown_user, width: 50, height: 50));
+        child: AppNetworkImage(url: url)
+    );
   }
 
   Widget _ranking(int index) {

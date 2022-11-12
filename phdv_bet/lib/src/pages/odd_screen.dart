@@ -13,6 +13,7 @@ import 'package:web_dashboard/src/model/team.dart';
 import 'package:web_dashboard/src/pages/bet_reference_screen.dart';
 import 'package:web_dashboard/src/utils/screen_helper.dart';
 import 'package:web_dashboard/src/widgets/app_confirm_popup.dart';
+import 'package:web_dashboard/src/widgets/app_network_image.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/congratulations.dart';
 import 'package:web_dashboard/src/widgets/indicator.dart';
@@ -87,10 +88,10 @@ class OddScreen extends StatelessWidget {
 
         final imageUrl = snapshot.data?.stadiumUrl ??
             "https://firebasestorage.googleapis.com/v0/b/worldbet-aaa29.appspot.com/o/banner%2Fbanner_01.png?alt=media&token=b3ddd7e2-0355-4c21-b6e9-fe0f68afd085";
-        return CachedNetworkImage(
-          imageUrl: imageUrl,
-          cacheKey: imageUrl,
-          fit: BoxFit.cover,
+
+        return AppNetworkImage(
+          url: imageUrl,
+          placeholder: Container(),
         );
       },
     );

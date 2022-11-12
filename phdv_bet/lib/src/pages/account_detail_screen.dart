@@ -18,6 +18,7 @@ import '../assets.dart';
 import '../model/bet_result.dart';
 import '../model/match.dart';
 import '../utils/bet_helper.dart';
+import '../widgets/app_network_image.dart';
 
 class AccountDetailScreen extends StatelessWidget {
   AccountDetailScreen({super.key});
@@ -114,15 +115,8 @@ class AccountDetailScreen extends StatelessWidget {
     return CircleAvatar(
         backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
         radius: 40,
-        child: url.isNotEmpty
-            ? CachedNetworkImage(
-                imageUrl: url,
-                cacheKey: url,
-                filterQuality: FilterQuality.low,
-                memCacheWidth: PHOTO_COMPRESS_SIZE,
-                maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
-                fit: BoxFit.cover)
-            : Image.asset(Assets.icons.ic_unknown_user, width: 50, height: 50));
+        child: AppNetworkImage(url: url)
+    );
   }
 
   Widget _userBet() {

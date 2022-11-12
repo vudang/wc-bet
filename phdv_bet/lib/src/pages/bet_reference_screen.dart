@@ -8,6 +8,7 @@ import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/model/bet.dart';
 import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/model/user.dart';
+import 'package:web_dashboard/src/widgets/app_network_image.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 
 import '../assets.dart';
@@ -91,19 +92,10 @@ class BetReferenceScreen extends StatelessWidget {
           CircleAvatar(
               backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
               radius: 25,
-              child: url.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: url,
-                      cacheKey: url,
-                      filterQuality: FilterQuality.low,
-                      memCacheWidth: PHOTO_COMPRESS_SIZE,
-                      maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
-                      fit: BoxFit.cover)
-                  : Image.asset(Assets.icons.ic_unknown_user,
-                      width: 50, height: 50)),
+              child: AppNetworkImage(url: url)
+          ),
           SizedBox(width: 10),
-          AppText(user?.displayName ?? "",
-              size: 18, color: SystemColor.BLACK, weight: FontWeight.w700)
+          AppText(user?.displayName ?? "", size: 18, color: SystemColor.BLACK, weight: FontWeight.w700)
         ],
       ),
     );

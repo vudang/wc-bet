@@ -8,6 +8,7 @@ import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/model/user.dart';
 import 'package:web_dashboard/src/utils/constants.dart';
 import 'package:web_dashboard/src/utils/screen_helper.dart';
+import 'package:web_dashboard/src/widgets/app_network_image.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import 'package:web_dashboard/src/widgets/team_flag.dart';
 
@@ -100,15 +101,7 @@ class UserBetScreen extends StatelessWidget {
     return CircleAvatar(
         backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
         radius: 40,
-        child: url.isNotEmpty
-            ? CachedNetworkImage(
-                imageUrl: url,
-                cacheKey: url,
-                filterQuality: FilterQuality.low,
-                memCacheWidth: PHOTO_COMPRESS_SIZE,
-                maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
-                fit: BoxFit.cover)
-            : Image.asset(Assets.icons.ic_unknown_user, width: 50, height: 50));
+        child: AppNetworkImage(url: url));
   }
 
   Widget _userBet() {
