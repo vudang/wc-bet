@@ -64,7 +64,7 @@ class Odd {
       return "$teamHome chấp $teamAway $label quả";
     }
 
-    return "$teamAway đội $teamHome $label quả";
+    return "$teamAway chấp đội $teamHome $label quả";
   }
 
 }
