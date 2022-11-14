@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/src/assets.dart';
+import 'package:web_dashboard/src/color.dart';
 import 'package:web_dashboard/src/utils/constants.dart';
 import 'package:web_dashboard/src/utils/screen_helper.dart';
 
@@ -23,13 +24,18 @@ class AppNetworkImage extends StatelessWidget {
   }
 
   Widget _mobile() {
-    return CachedNetworkImage(
-      imageUrl: url,
-      cacheKey: url,
-      filterQuality: FilterQuality.low,
-      memCacheWidth: PHOTO_COMPRESS_SIZE,
-      maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
-      fit: BoxFit.cover
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(40))
+      ),
+      child: CachedNetworkImage(
+          imageUrl: url,
+          cacheKey: url,
+          filterQuality: FilterQuality.low,
+          memCacheWidth: PHOTO_COMPRESS_SIZE,
+          maxWidthDiskCache: PHOTO_COMPRESS_SIZE,
+          fit: BoxFit.cover),
     );
   }
 

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.phdv_bet">
    <application
-        android:label="phdv_bet"
+        android:label="PH 88"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

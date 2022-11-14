@@ -22,6 +22,7 @@ class FirebaseFootballMatchApi implements FootballMatchApi {
     final entries = querySnapshot.docs
         .map((doc) => FootballMatch.fromJson(doc.data()))
         .toList();
+    entries.sort(((a, b) => ((a.date ?? DateTime.now())).compareTo((b.date ?? DateTime.now()))));
     return entries;
   }
 
@@ -31,6 +32,7 @@ class FirebaseFootballMatchApi implements FootballMatchApi {
     final entries = querySnapshot.docs
         .map((doc) => FootballMatch.fromJson(doc.data()))
         .toList();
+    entries.sort(((a, b) => ((a.date ?? DateTime.now())).compareTo((b.date ?? DateTime.now()))));
     return entries;
   }
 
@@ -38,9 +40,11 @@ class FirebaseFootballMatchApi implements FootballMatchApi {
   Stream<List<FootballMatch>> subscribe() {
     var snapshots = ref.snapshots();
     var result = snapshots.map<List<FootballMatch>>((querySnapshot) {
-      return querySnapshot.docs.map<FootballMatch>((snapshot) {
+      final list = querySnapshot.docs.map<FootballMatch>((snapshot) {
         return FootballMatch.fromJson(snapshot.data());
       }).toList();
+      list.sort(((a, b) => ((a.date ?? DateTime.now())).compareTo((b.date ?? DateTime.now()))));
+      return list;
     });
 
     return result;

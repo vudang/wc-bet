@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:web_dashboard/src/app.dart';
-import 'package:web_dashboard/src/assets.dart';
 import 'package:web_dashboard/src/model/config.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 
@@ -18,7 +17,7 @@ class DownloadAppScreen extends StatelessWidget {
           children: [
             Expanded(child: _ios(config?.iosDownloadLink ?? "")),
             SizedBox(width: 20),
-            Expanded(child: _android(config?.iosDownloadLink ?? "")),
+            Expanded(child: _android(config?.androidDownloadLink ?? "")),
           ],
         ));
       })
