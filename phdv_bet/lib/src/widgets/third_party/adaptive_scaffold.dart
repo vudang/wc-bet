@@ -124,6 +124,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     return Scaffold(
       body: widget.body,
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: SystemColor.RED,
         items: [
           ...widget.destinations.map(
             (d) => BottomNavigationBarItem(
