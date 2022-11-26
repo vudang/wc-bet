@@ -42,7 +42,7 @@ class AccountDetailScreen extends StatelessWidget {
     final allBets = await _betApi?.list();
 
     /// Danh sach trận đã kết thúc
-    final matches = await _matchApi?.list();
+    var matches = await _matchApi?.list();
     _allMatches = matches ?? [];
 
     /// Danh sách kèo đã khoá không cho bet nữa
@@ -57,11 +57,9 @@ class AccountDetailScreen extends StatelessWidget {
         bets: allBets ?? [],
         matchs: matches ?? [],
         odds: allOddsLocked ?? []);
-    
+
     final betDoestPlay = BetHelper.getUserBetDoesNotPlay(
-        user: user,
-        bets: allBets ?? [],
-        matchs: matches ?? []);
+        user: user, bets: allBets ?? [], matchs: matches ?? []);
 
     final listBet = userBet.bets + betDoestPlay.bets;
     final betData = UserBet(user, listBet);
@@ -115,8 +113,7 @@ class AccountDetailScreen extends StatelessWidget {
     return CircleAvatar(
         backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
         radius: 40,
-        child: AppNetworkImage(url: url)
-    );
+        child: AppNetworkImage(url: url));
   }
 
   Widget _userBet() {
@@ -127,6 +124,7 @@ class AccountDetailScreen extends StatelessWidget {
           if (userBet == null || userBet.bets.isEmpty) {
             return _emptyView();
           }
+          userBet.bets.sort((a, b) => a.bet.matchId!.compareTo(b.bet.matchId!));
           return Padding(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -150,7 +148,8 @@ class AccountDetailScreen extends StatelessWidget {
   }
 
   Widget _betItem(BetResult bet) {
-    final match = _allMatches.firstWhere((m) => m.matchId == bet.bet.matchId, orElse: () => FootballMatch());
+    final match = _allMatches.firstWhere((m) => m.matchId == bet.bet.matchId,
+        orElse: () => FootballMatch());
     return Card(
         child: Padding(
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -167,14 +166,16 @@ class AccountDetailScreen extends StatelessWidget {
     ));
   }
 
-  Widget _matchInfo(FootballMatch match, bool chooseHome, {bool isMissing = false}) {
+  Widget _matchInfo(FootballMatch match, bool chooseHome,
+      {bool isMissing = false}) {
     return Row(
       children: [
         _teamHome(match, chooseHome, isMissing: isMissing),
         SizedBox(width: 5),
-        match.finished == true ? 
-        AppText("${match.homeScore ?? "-"} : ${match.awayScore ?? "-"}", weight: FontWeight.bold) : 
-        AppText("- : -", weight: FontWeight.bold),
+        match.finished == true
+            ? AppText("${match.homeScore ?? "-"} : ${match.awayScore ?? "-"}",
+                weight: FontWeight.bold)
+            : AppText("- : -", weight: FontWeight.bold),
         SizedBox(width: 5),
         _teamAway(match, !chooseHome, isMissing: isMissing)
       ],
