@@ -10,6 +10,7 @@ import 'package:web_dashboard/src/api/api.dart';
 import 'package:web_dashboard/src/model/team.dart';
 import 'package:web_dashboard/src/model/user.dart' as Model;
 import 'package:web_dashboard/src/model/winner.dart';
+import 'package:web_dashboard/src/pages/winner_reference_screen.dart';
 import 'package:web_dashboard/src/widgets/indicator.dart';
 import 'package:web_dashboard/src/widgets/team_flag.dart';
 
@@ -29,6 +30,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
   TeamApi? _teamApi;
   WinnerApi? _winnerApi;
   UserApi? _userApi;
+  StreamController<Team?> _streamChoosedTeamController = StreamController();
 
   _fetchData() async {
     final api = Provider.of<AppState>(context, listen: false).api;
@@ -88,17 +90,17 @@ class _WinnerScreenState extends State<WinnerScreen> {
   }
 
 
-  Widget _contentView(List<Team> listRanking, List<Winner> winners, Model.User? user) {
+  Widget _contentView(List<Team> teams, List<Winner> winners, Model.User? user) {
     if (ScreenHelper.isLargeScreen(context)) {
       return Row(
         children: [
-          Expanded(child: _winnerView(listRanking, winners, user)),
-          Expanded(child: _userDetailView()),
+          Expanded(child: _winnerView(teams, winners, user)),
+          Expanded(child: _detailWinnerView()),
         ],
       );
     }
 
-    return _winnerView(listRanking, winners, user);
+    return _winnerView(teams, winners, user);
   }
 
   Widget _winnerView(List<Team> teams, List<Winner> winners, Model.User? user) {
@@ -126,16 +128,18 @@ class _WinnerScreenState extends State<WinnerScreen> {
     final isChoosed = winners.firstWhere((e) => e.userId == FirebaseAuth.instance.currentUser?.uid && e.teamId == team?.id, orElse: () => Winner()).userId != null;
     return ListTile(
       leading: TeamFag(url: team?.flag ?? ""),
-      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-        SizedBox(width: 5),
-        Visibility(
-          visible: isChoosed,
-          child: _avatar(user)
-        ),
-        SizedBox(width: 5),
-        _counting(team?.winnerCount ?? 0),
-        Icon(Icons.arrow_right)
-      ]),
+      trailing: GestureDetector(
+        onTap: () {
+          _showWinnerRefView(team!);
+        },
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          SizedBox(width: 5),
+          Visibility(visible: isChoosed, child: _avatar(user)),
+          SizedBox(width: 5),
+          _counting(team?.winnerCount ?? 0),
+          Icon(Icons.arrow_right)
+        ]),
+      ),
       onTap: () {
         if (!isChoosed) {
           _confirmSelectTeam(team);
@@ -151,8 +155,18 @@ class _WinnerScreenState extends State<WinnerScreen> {
     );
   }
   
-  Widget _userDetailView() {
-    return Container();
+  Widget _detailWinnerView() {
+    return StreamBuilder<Team?>(
+      stream: _streamChoosedTeamController.stream,
+      builder: ((context, snapshot) {
+        final team = snapshot.data;
+        if (team == null) {
+          return Container();
+        }
+
+        return WinnerReferenceScreen(team: team);
+      })
+    );
   }
 
 
@@ -217,5 +231,13 @@ class _WinnerScreenState extends State<WinnerScreen> {
     Indicator.show(context);
     await _winnerApi?.placeWinner(winner);
     Indicator.hide(context);
+  }
+  
+  _showWinnerRefView(Team team) {
+    if (ScreenHelper.isLargeScreen(context)) {
+      _streamChoosedTeamController.add(team);
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => WinnerReferenceScreen(team: team)));
+    }
   }
 }
