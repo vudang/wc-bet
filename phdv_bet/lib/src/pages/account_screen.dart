@@ -10,9 +10,7 @@ import '../color.dart';
 import '../utils/screen_helper.dart';
 import '../widgets/app_text.dart';
 
-enum AccountMenu {
-  profile, standing, rule, help 
-}
+enum AccountMenu { profile, standing, rule, help }
 
 class AccountScreen extends StatelessWidget {
   final _listMenus = [AccountMenu.standing, AccountMenu.rule, AccountMenu.help];
@@ -48,7 +46,7 @@ class AccountScreen extends StatelessWidget {
       }).toList(),
     );
   }
-  
+
   Widget _menuItem(AccountMenu menu) {
     return ListTile(
       title: _menuTypeItem(menu),
@@ -83,7 +81,7 @@ class AccountScreen extends StatelessWidget {
         return AppText("How to play?");
     }
   }
-  
+
   _pressedMenu(AccountMenu menu) {
     switch (menu) {
       case AccountMenu.profile:
@@ -97,14 +95,19 @@ class AccountScreen extends StatelessWidget {
     }
   }
 
-  _gotoStanding() {
-    Navigator.of(_context).push(MaterialPageRoute(builder: (context) => StandingPage()));
+  _gotoStanding() async {
+    final config = await _configApi?.get();
+    Uri _url = Uri.parse(config?.standingUrl ??
+        "https://www.google.com/search?q=world+cup+2022+standing&oq=world+cup+2022+standing&aqs=chrome..69i57j0i512l4j0i22i30l5.9370j1j7&sourceid=chrome&ie=UTF-8#sie=lg;/m/0fp_8fm;2;/m/030q7;st;fp;1");
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
   }
-  
+
   _gotoAccountDetail() async {
     final user = await _userApi?.get(FirebaseAuth.instance.currentUser!.uid);
-    Navigator.of(_context)
-        .push(MaterialPageRoute(builder: (context) => UserBetScreen(user: user!)));
+    Navigator.of(_context).push(
+        MaterialPageRoute(builder: (context) => UserBetScreen(user: user!)));
   }
 
   _gotoRules() async {
@@ -114,7 +117,7 @@ class AccountScreen extends StatelessWidget {
       throw 'Could not launch $_url';
     }
   }
-  
+
   _gotoHelp() async {
     final config = await _configApi?.get();
     Uri _url = Uri.parse(config?.helpUrl ?? "");
@@ -122,5 +125,4 @@ class AccountScreen extends StatelessWidget {
       throw 'Could not launch $_url';
     }
   }
-  
 }

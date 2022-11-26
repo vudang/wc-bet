@@ -4,14 +4,14 @@ part 'config.g.dart';
 
 @JsonSerializable(includeIfNull: false)
 class Config {
-  Config({
-    this.homeBannerUrl,
-    this.stadiumUrl,
-    this.helpUrl,
-    this.ruleUrl,
-    this.iosDownloadLink,
-    this.androidDownloadLink
-  });
+  Config(
+      {this.homeBannerUrl,
+      this.stadiumUrl,
+      this.helpUrl,
+      this.ruleUrl,
+      this.standingUrl,
+      this.iosDownloadLink,
+      this.androidDownloadLink});
 
   @JsonKey(name: "home_banner_url")
   final String? homeBannerUrl;
@@ -25,6 +25,9 @@ class Config {
   @JsonKey(name: "rule_url")
   final String? ruleUrl;
 
+  @JsonKey(name: "standing_url")
+  final String? standingUrl;
+
   @JsonKey(name: "android_download_link")
   final String? androidDownloadLink;
 
@@ -33,5 +36,4 @@ class Config {
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigToJson(this);
-
 }

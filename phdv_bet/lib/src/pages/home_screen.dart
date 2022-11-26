@@ -44,26 +44,35 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final api = Provider.of<AppState>(context).api;
     _configApi = api?.configApi;
-    
+
     final isWeb = ScreenHelper.isLargeScreen(context);
-    final menus = isWeb  ? const [
-        AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
-        AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
-        AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
-        AdaptiveScaffoldDestination(title: 'Standing', icon: Icons.table_chart),
-        AdaptiveScaffoldDestination(title: 'Game Rules', icon: Icons.rule),
-        AdaptiveScaffoldDestination(title: 'How to play?', icon: Icons.help),
-        AdaptiveScaffoldDestination(title: 'Download Mobile App?', icon: Icons.install_mobile)
-      ] :
-      const [
-        AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
-        AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
-        AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
-        AdaptiveScaffoldDestination(title: 'More', icon: Icons.more_rounded)
-      ];
+    final menus = isWeb
+        ? const [
+            AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
+            AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
+            AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
+            AdaptiveScaffoldDestination(
+                title: 'Standing', icon: Icons.table_chart),
+            AdaptiveScaffoldDestination(title: 'Game Rules', icon: Icons.rule),
+            AdaptiveScaffoldDestination(
+                title: 'How to play?', icon: Icons.help),
+            AdaptiveScaffoldDestination(
+                title: 'Download Mobile App?', icon: Icons.install_mobile)
+          ]
+        : const [
+            AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
+            AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
+            AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
+            AdaptiveScaffoldDestination(title: 'More', icon: Icons.more_rounded)
+          ];
 
     return AdaptiveScaffold(
-      title: const AppText('PH 88', color: SystemColor.WHITE, weight: FontWeight.w700, size: 22,),
+      title: const AppText(
+        'PH 88',
+        color: SystemColor.WHITE,
+        weight: FontWeight.w700,
+        size: 22,
+      ),
       actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -76,7 +85,8 @@ class _HomePageState extends State<HomePage> {
       ],
       currentIndex: _pageIndex,
       destinations: menus,
-      body: isWeb ? _webPageAtIndex(_pageIndex) : _mobilePageAtIndex(_pageIndex),
+      body:
+          isWeb ? _webPageAtIndex(_pageIndex) : _mobilePageAtIndex(_pageIndex),
       onNavigationIndexChange: (newIndex) {
         setState(() {
           _pageIndex = newIndex;
@@ -126,7 +136,7 @@ class _HomePageState extends State<HomePage> {
     if (index == 2) {
       return AccountDetailScreen();
     }
-    
+
     return AccountScreen();
   }
 
@@ -144,7 +154,8 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (index == 3) {
-      return StandingPage();
+      _goToStanding();
+      return Container();
     }
 
     if (index == 4) {
@@ -160,6 +171,14 @@ class _HomePageState extends State<HomePage> {
     return DownloadAppScreen();
   }
 
+  _goToStanding() async {
+    final config = await _configApi?.get();
+    Uri _url = Uri.parse(config?.standingUrl ??
+        "https://www.google.com/search?q=world+cup+2022+standing&oq=world+cup+2022+standing&aqs=chrome..69i57j0i512l4j0i22i30l5.9370j1j7&sourceid=chrome&ie=UTF-8#sie=lg;/m/0fp_8fm;2;/m/030q7;st;fp;1");
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
+  }
 
   _gotoRules() async {
     final config = await _configApi?.get();
