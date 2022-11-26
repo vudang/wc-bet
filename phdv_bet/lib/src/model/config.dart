@@ -11,6 +11,8 @@ class Config {
       this.ruleUrl,
       this.standingUrl,
       this.iosDownloadLink,
+      this.winnerLock,
+      this.winnerTimeEnd,
       this.androidDownloadLink});
 
   @JsonKey(name: "home_banner_url")
@@ -33,6 +35,13 @@ class Config {
 
   @JsonKey(name: "ios_download_link")
   final String? iosDownloadLink;
+
+  @JsonKey(name: "winner_lock")
+  final bool? winnerLock;
+
+  @JsonKey(name: "winner_time_end")
+  final String? winnerTimeEnd;
+  
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigToJson(this);

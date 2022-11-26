@@ -25,12 +25,12 @@ Map<String, dynamic> _$TeamToJson(Team instance) {
     }
   }
 
+  writeNotNull('active', instance.active);
   writeNotNull('name_en', instance.nameEn);
   writeNotNull('flag', instance.flag);
   writeNotNull('groups', instance.groups);
   writeNotNull('id', instance.id);
   writeNotNull('team_id', instance.teamId);
   writeNotNull('pts', instance.pts);
-  writeNotNull('active', instance.active);
   return val;
 }

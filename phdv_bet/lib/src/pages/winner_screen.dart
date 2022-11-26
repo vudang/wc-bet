@@ -30,6 +30,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
   TeamApi? _teamApi;
   WinnerApi? _winnerApi;
   UserApi? _userApi;
+  ConfigApi? _configApi;
   StreamController<Team?> _streamChoosedTeamController = StreamController();
 
   _fetchData() async {
@@ -37,6 +38,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
     _teamApi = api?.teamApi;
     _winnerApi = api?.winnerApi;
     _userApi = api?.userApi;
+    _configApi = api?.configApi;
   }
   
   @override
@@ -197,10 +199,36 @@ class _WinnerScreenState extends State<WinnerScreen> {
     );
   }
   
-  _confirmSelectTeam(Team? team) {
+  _confirmSelectTeam(Team? team) async {
+    final config = await _configApi?.get();
+    final endTime = config?.winnerTimeEnd ?? "18:00 03/12/2022";
+    if (config?.winnerLock == true) {
+      final dialog = AppConfirmPopup(
+        title: "Time Over!",
+        message: "Winner game was closed at $endTime",
+        positiveButton: "Back",
+        negativeButton: "Close",
+        onNegativePressed: () {
+          Navigator.of(context).pop();
+        },
+        onPositivePressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+
+      showCupertinoModalPopup(
+          context: context,
+          barrierColor: SystemColor.BLACK.withOpacity(0.8),
+          builder: (_) {
+            return dialog;
+          });
+
+      return;
+    } 
+
     final dialog = AppConfirmPopup(
       title: "Are you sure ${team?.nameEn?.toUpperCase()} will be the Champion?",
-      message: "You can change utils 18:00, 03/12/2022",
+      message: "You can change utils $endTime",
       positiveButton: "BET ${team?.nameEn}",
       negativeButton: "Cancel",
       onNegativePressed: () {
