@@ -41,7 +41,7 @@ class WinnerReferenceScreen extends StatelessWidget {
           stream: _userApi!.list().asStream(),
           builder: (ctx, snapshot) {
             final users = snapshot.data;
-            print("Winner data: ${winners.length} => ${users?.length}");
+            
             return Padding(
               padding: EdgeInsets.all(16),
               child: _listUsersInBet(context, winners, users),
