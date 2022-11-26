@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -126,17 +127,37 @@ class _RankingScreenState extends State<RankingScreen> {
   }
 
   Widget _rankingView(List<UserBet> listRanking) {
-    return ListView.builder(
-      itemCount: listRanking.length,
-      itemBuilder: (ctx, index) {
-        final ranking = listRanking[index];
-        return Card(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: _rankingRow(ranking, index),
-          ),
-        );
-      },
+    return Column(
+      children: [
+        _totalBudget(listRanking),
+        Expanded(child: ListView.builder(
+          itemCount: listRanking.length,
+          itemBuilder: (ctx, index) {
+            final ranking = listRanking[index];
+            return Card(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: _rankingRow(ranking, index),
+              ),
+            );
+          },
+        ))
+      ],
+    );
+  }
+
+  Widget _totalBudget(List<UserBet> listRanking) {
+    int total = listRanking.map((e) => e.loseScore).reduce((value, element) => value + element);
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        child: Row(
+          children: [
+            Expanded(child: Image.asset(Assets.icons.budget, width: 100, height: 100)),
+            Expanded(child: AppText("$total", size: 50, weight: FontWeight.w700, color: SystemColor.RED))
+          ],
+        ),
+      ),
     );
   }
 
