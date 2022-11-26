@@ -33,8 +33,13 @@ class Team {
       this.nameEn,
       this.flag,
       this.groups,
-      this.pts
+      this.pts,
+      this.active
   });
+
+
+  @JsonKey(name: "active")
+  final bool? active;
 
   @JsonKey(name: "name_en")
   final String? nameEn;
@@ -58,6 +63,9 @@ class Team {
   int get ptsInt {
     return int.parse(pts ?? "0");
   }
+
+  @JsonKey(ignore: true)
+  int? winnerCount;
 
   factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
   Map<String, dynamic> toJson() => _$TeamToJson(this);

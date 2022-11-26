@@ -9,14 +9,20 @@ class FirebaseWinnerApi implements WinnerApi {
   FirebaseWinnerApi(this.fireStore) : ref = fireStore.collection('winner');
 
   @override
-  Future<List<Winner>> list() async {
-    final querySnapshot = await ref.get();
-    final entries = querySnapshot.docs.map((doc) => Winner.fromJson(doc.data())).toList();
-    return entries;
-  }
-
-  @override
   Future<void> placeWinner(Winner winner) {
     return ref.doc(winner.userId).set(winner.toJson());
+  }
+  
+  @override
+  Stream<List<Winner>> subcribe() {
+    var snapshots = ref.snapshots();
+    var result = snapshots.map<List<Winner>>((querySnapshot) {
+      final list = querySnapshot.docs.map<Winner>((snapshot) {
+        return Winner.fromJson(snapshot.data());
+      }).toList();
+      return list;
+    });
+
+    return result;
   }
 }

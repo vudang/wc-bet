@@ -21,7 +21,7 @@ abstract class Api {
 
 /// Winner
 abstract class WinnerApi {
-  Future<List<Winner>> list();
+  Stream<List<Winner>> subcribe();
   Future<void> placeWinner(Winner winner);
 }
 

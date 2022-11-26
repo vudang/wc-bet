@@ -13,6 +13,7 @@ Team _$TeamFromJson(Map<String, dynamic> json) => Team(
       flag: json['flag'] as String?,
       groups: json['groups'] as String?,
       pts: json['pts'] as String?,
+      active: json['active'] as bool?,
     );
 
 Map<String, dynamic> _$TeamToJson(Team instance) {
@@ -30,5 +31,6 @@ Map<String, dynamic> _$TeamToJson(Team instance) {
   writeNotNull('id', instance.id);
   writeNotNull('team_id', instance.teamId);
   writeNotNull('pts', instance.pts);
+  writeNotNull('active', instance.active);
   return val;
 }
