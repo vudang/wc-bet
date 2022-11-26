@@ -11,6 +11,7 @@ import 'package:web_dashboard/src/pages/account_detail_screen.dart';
 import 'package:web_dashboard/src/pages/account_screen.dart';
 import 'package:web_dashboard/src/pages/ranking_screen.dart';
 import 'package:web_dashboard/src/pages/standing_sceen.dart';
+import 'package:web_dashboard/src/pages/winner_screen.dart';
 import 'package:web_dashboard/src/utils/screen_helper.dart';
 import 'package:web_dashboard/src/widgets/app_text.dart';
 import '../app.dart';
@@ -136,7 +137,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (index == 2) {
-      return AccountDetailScreen();
+      return WinnerScreen();
     }
 
     if (index == 3) {

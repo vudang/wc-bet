@@ -3,6 +3,7 @@ import 'package:web_dashboard/src/model/config.dart';
 import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/model/odd.dart';
 import 'package:web_dashboard/src/model/standing.dart';
+import 'package:web_dashboard/src/model/team.dart';
 import 'package:web_dashboard/src/model/user.dart';
 import 'package:web_dashboard/src/model/winner.dart';
 
@@ -15,13 +16,20 @@ abstract class Api {
   BetApi get betApi;
   UserApi get userApi;
   WinnerApi get winnerApi;
+  TeamApi get teamApi;
 }
 
-/// User
+/// Winner
 abstract class WinnerApi {
   Future<List<Winner>> list();
   Future<void> placeWinner(Winner winner);
 }
+
+/// Team
+abstract class TeamApi {
+  Future<List<Team>> list();
+}
+
 
 /// User
 abstract class UserApi {

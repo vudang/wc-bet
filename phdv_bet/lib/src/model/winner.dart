@@ -4,17 +4,13 @@ part 'winner.g.dart';
 @JsonSerializable(includeIfNull: false)
 class Winner {
   Winner({
-    this.amount,
     this.teamId,
     this.userId,
     this.date
   });
 
-  @JsonKey(name: "amount")
-  final int? amount;
-
   @JsonKey(name: "chooseTeam")
-  final int? teamId;
+  final String? teamId;
 
   @JsonKey(name: "userId")
   final String? userId;

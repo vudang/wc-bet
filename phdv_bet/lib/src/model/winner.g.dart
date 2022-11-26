@@ -7,8 +7,7 @@ part of 'winner.dart';
 // **************************************************************************
 
 Winner _$WinnerFromJson(Map<String, dynamic> json) => Winner(
-      amount: json['amount'] as int?,
-      teamId: json['chooseTeam'] as int?,
+      teamId: json['chooseTeam'] as String?,
       userId: json['userId'] as String?,
       date:
           json['date'] == null ? null : DateTime.parse(json['date'] as String),
@@ -23,7 +22,6 @@ Map<String, dynamic> _$WinnerToJson(Winner instance) {
     }
   }
 
-  writeNotNull('amount', instance.amount);
   writeNotNull('chooseTeam', instance.teamId);
   writeNotNull('userId', instance.userId);
   writeNotNull('date', instance.date?.toIso8601String());

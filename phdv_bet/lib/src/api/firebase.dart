@@ -8,6 +8,7 @@ import 'package:web_dashboard/src/api/firebase_user.dart';
 import 'package:web_dashboard/src/api/firebase_winner.dart';
 
 import 'api.dart';
+import 'firebase_team.dart';
 
 class FirebaseApi implements Api {
   @override
@@ -31,6 +32,9 @@ class FirebaseApi implements Api {
   @override
   final WinnerApi winnerApi;
 
+  @override
+  final TeamApi teamApi;
+
   FirebaseApi(FirebaseFirestore firestore) :
    footballMatchApi = FirebaseFootballMatchApi(firestore),
         standingApi = FirebaseStandingApi(firestore),
@@ -38,5 +42,6 @@ class FirebaseApi implements Api {
           configApi = FirebaseConfigApi(firestore),
              betApi = FirebaseBetApi(firestore),
           winnerApi = FirebaseWinnerApi(firestore),
-            userApi = FirebaseUserApi(firestore);
+            userApi = FirebaseUserApi(firestore),
+            teamApi = FirebaseTeamApi(firestore);
 }
