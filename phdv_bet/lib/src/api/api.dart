@@ -4,6 +4,7 @@ import 'package:web_dashboard/src/model/match.dart';
 import 'package:web_dashboard/src/model/odd.dart';
 import 'package:web_dashboard/src/model/standing.dart';
 import 'package:web_dashboard/src/model/user.dart';
+import 'package:web_dashboard/src/model/winner.dart';
 
 /// Manipulates app data,
 abstract class Api {
@@ -13,6 +14,13 @@ abstract class Api {
   ConfigApi get configApi;
   BetApi get betApi;
   UserApi get userApi;
+  WinnerApi get winnerApi;
+}
+
+/// User
+abstract class WinnerApi {
+  Future<List<Winner>> list();
+  Future<void> placeWinner(Winner winner);
 }
 
 /// User

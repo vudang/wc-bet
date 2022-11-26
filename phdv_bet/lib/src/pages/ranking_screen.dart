@@ -15,7 +15,6 @@ import 'package:web_dashboard/src/widgets/app_text.dart';
 
 import '../assets.dart';
 import '../model/bet_result.dart';
-import '../utils/constants.dart';
 import '../utils/screen_helper.dart';
 
 class RankingScreen extends StatefulWidget {

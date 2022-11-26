@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -62,6 +63,7 @@ class _HomePageState extends State<HomePage> {
         : const [
             AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
             AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
+            AdaptiveScaffoldDestination(title: 'Winner', icon: Icons.archive),
             AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
             AdaptiveScaffoldDestination(title: 'More', icon: Icons.more_rounded)
           ];
@@ -134,6 +136,10 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (index == 2) {
+      return AccountDetailScreen();
+    }
+
+    if (index == 3) {
       return AccountDetailScreen();
     }
 
