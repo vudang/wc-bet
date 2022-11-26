@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> {
         ? const [
             AdaptiveScaffoldDestination(title: 'Match', icon: Icons.home),
             AdaptiveScaffoldDestination(title: 'Ranking', icon: Icons.list),
+            AdaptiveScaffoldDestination(title: 'Winner', icon: Icons.archive),
             AdaptiveScaffoldDestination(title: 'Account', icon: Icons.person),
             AdaptiveScaffoldDestination(
                 title: 'Standing', icon: Icons.table_chart),
@@ -157,20 +158,24 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (index == 2) {
-      return AccountDetailScreen();
+      return WinnerScreen();
     }
 
     if (index == 3) {
+      return AccountDetailScreen();
+    }
+
+    if (index == 4) {
       _goToStanding();
       return Container();
     }
 
-    if (index == 4) {
+    if (index == 5) {
       _gotoRules();
       return Container();
     }
 
-    if (index == 5) {
+    if (index == 6) { 
       _gotoHelp();
       return Container();
     }

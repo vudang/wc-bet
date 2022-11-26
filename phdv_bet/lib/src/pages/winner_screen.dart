@@ -95,7 +95,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
       return Row(
         children: [
           Expanded(child: _winnerView(teams, winners, user)),
-          Expanded(child: _detailWinnerView()),
+          Expanded(child: _detailWinnerView(winners)),
         ],
       );
     }
@@ -130,7 +130,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
       leading: TeamFag(url: team?.flag ?? ""),
       trailing: GestureDetector(
         onTap: () {
-          _showWinnerRefView(team!);
+          _showWinnerRefView(team!, winners);
         },
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           SizedBox(width: 5),
@@ -155,7 +155,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
     );
   }
   
-  Widget _detailWinnerView() {
+  Widget _detailWinnerView(List<Winner> winners) {
     return StreamBuilder<Team?>(
       stream: _streamChoosedTeamController.stream,
       builder: ((context, snapshot) {
@@ -164,7 +164,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
           return Container();
         }
 
-        return WinnerReferenceScreen(team: team);
+        return WinnerReferenceScreen(team: team, winners: winners);
       })
     );
   }
@@ -233,11 +233,11 @@ class _WinnerScreenState extends State<WinnerScreen> {
     Indicator.hide(context);
   }
   
-  _showWinnerRefView(Team team) {
+  _showWinnerRefView(Team team, List<Winner> winners) {
     if (ScreenHelper.isLargeScreen(context)) {
       _streamChoosedTeamController.add(team);
     } else {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => WinnerReferenceScreen(team: team)));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => WinnerReferenceScreen(team: team, winners: winners)));
     }
   }
 }

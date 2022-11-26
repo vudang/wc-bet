@@ -19,16 +19,17 @@ import '../utils/constants.dart';
 
 class WinnerReferenceScreen extends StatelessWidget {
   final Team team;
-  
+  final List<Winner> winners;
   WinnerApi? _winnerApi;
   UserApi? _userApi;
 
-  WinnerReferenceScreen({super.key, required this.team});
+  WinnerReferenceScreen({super.key, required this.team, required this.winners});
 
   @override
   Widget build(BuildContext context) {
-    _winnerApi = Provider.of<AppState>(context).api?.winnerApi;
-    _userApi = Provider.of<AppState>(context).api?.userApi;
+    final api = Provider.of<AppState>(context).api;
+    _winnerApi = api?.winnerApi;
+    _userApi = api?.userApi;
     final title = team.nameEn;
 
     return Scaffold(
@@ -36,11 +37,11 @@ class WinnerReferenceScreen extends StatelessWidget {
         title: AppText("Who are choosing $title?",
             color: SystemColor.WHITE, weight: FontWeight.w700),
       ),
-      body: StreamBuilder2<List<Winner>, List<User>>(
-          streams: StreamTuple2(_winnerApi!.subcribe(), _userApi!.list().asStream()),
+      body: StreamBuilder<List<User>>(
+          stream: _userApi!.list().asStream(),
           builder: (ctx, snapshot) {
-            final winners = snapshot.snapshot1.data;
-            final users = snapshot.snapshot2.data;
+            final users = snapshot.data;
+            print("Winner data: ${winners.length} => ${users?.length}");
             return Padding(
               padding: EdgeInsets.all(16),
               child: _listUsersInBet(context, winners, users),
@@ -50,11 +51,10 @@ class WinnerReferenceScreen extends StatelessWidget {
   }
 
   Widget _listUsersInBet(BuildContext context, List<Winner>? winners, List<User>? users) {
-    if (winners == null || winners.isEmpty) {
+    final finalUsers = users?.where((u) => winners?.firstWhere((w) => w.userId == u.userId && w.teamId == team.id, orElse: () => Winner()).userId != null).toList() ?? [];
+    if (finalUsers.isEmpty) {
       return _emptyView();
     }
-
-    final finalUsers = users?.where((u) => winners.firstWhere((w) => w.userId == u.userId && w.teamId == team.id, orElse: () => Winner()).userId != null).toList() ?? [];
     return ListView.separated(
       itemCount: finalUsers.length,
       itemBuilder: (ctx, index) {
@@ -98,7 +98,7 @@ class WinnerReferenceScreen extends StatelessWidget {
               width: 150,
               height: 150,
             ),
-            AppText("Nobody bet for this team :D")
+            AppText("Nobody choose this team :D")
           ]),
         ));
   }
