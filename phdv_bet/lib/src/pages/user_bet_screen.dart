@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/src/color.dart';
+import 'package:web_dashboard/src/model/odd.dart';
 import 'package:web_dashboard/src/model/user.dart';
 import 'package:web_dashboard/src/utils/constants.dart';
 import 'package:web_dashboard/src/utils/screen_helper.dart';
@@ -21,12 +22,14 @@ import '../utils/bet_helper.dart';
 
 class UserBetScreen extends StatelessWidget {
   final User user;
+
   UserBetScreen({super.key, required this.user});
 
   BetApi? _betApi;
   OddApi? _oddApi;
   FootballMatchApi? _matchApi;
   List<FootballMatch> _allMatches = [];
+  List<Odd> _allOdds = [];
   late BuildContext _context;
   StreamController<UserBet> _userBetStream = StreamController();
 
@@ -40,11 +43,14 @@ class UserBetScreen extends StatelessWidget {
     final allBets = await _betApi?.list();
 
     /// Danh sach trận đã kết thúc
-    final allMatchFinished = await _matchApi?.listFinished();
-    _allMatches = allMatchFinished ?? [];
+    final allMatchFinished = await _matchApi?.listFinished() ?? [];
+    allMatchFinished.sort(((b, a) => ((a.date ?? DateTime.now())).compareTo((b.date ?? DateTime.now()))));
+    _allMatches = allMatchFinished;
 
     /// Danh sách kèo đã khoá không cho bet nữa
-    final allOddsLocked = await _oddApi?.list(isFillterLocked: true);
+    final allOddsLocked = await _oddApi?.list(isFillterLocked: true) ?? [];
+    allOddsLocked.sort(((b, a) => ((a.dateTime ?? DateTime.now())).compareTo((b.dateTime ?? DateTime.now()))));
+    _allOdds = allOddsLocked;
 
     final userBet = BetHelper.getUserBetData(
         user: user,
@@ -155,14 +161,22 @@ class UserBetScreen extends StatelessWidget {
 
   Widget _matchInfo(FootballMatch match, bool chooseHome,
       {bool isMissing = false}) {
-    return Row(
+        final odd = _allOdds.firstWhere((m) => m.matchId == match.matchId,
+        orElse: () => Odd());
+    return Column(
       children: [
-        _teamHome(match, chooseHome, isMissing: isMissing),
-        SizedBox(width: 5),
-        AppText("${match.homeScore ?? "-"} : ${match.awayScore ?? "-"}",
-            weight: FontWeight.bold),
-        SizedBox(width: 5),
-        _teamAway(match, !chooseHome, isMissing: isMissing)
+        Row(
+          children: [
+            _teamHome(match, chooseHome, isMissing: isMissing),
+            SizedBox(width: 5),
+            AppText("${match.homeScore ?? "-"} : ${match.awayScore ?? "-"}",
+                weight: FontWeight.bold),
+            SizedBox(width: 5),
+            _teamAway(match, !chooseHome, isMissing: isMissing)
+          ],
+        ),
+        SizedBox(height: 10),
+        AppText(odd.desciption ?? "", color: SystemColor.GREY_LIGHT, size: 12)
       ],
     );
   }
