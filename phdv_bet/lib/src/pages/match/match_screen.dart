@@ -198,8 +198,10 @@ class MatchScreen extends StatelessWidget {
 
   Widget _matchFinished(List<FootballMatch> matches, List<Odd> odds, List<Bet> myBets, BuildContext context) {
     final comming = matches.where((element) => element.finished == true);
+    final list = comming.toList();
+    list.sort(((b, a) => ((a.date ?? DateTime.now())).compareTo((b.date ?? DateTime.now()))));
     return MatchListAndBetScreen(
-      list: comming.toList(),
+      list: list,
       odds: odds,
       userBets: myBets,
       onSelected: (match) => _selectedMatch(match, context),

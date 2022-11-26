@@ -15,6 +15,8 @@ Odd _$OddFromJson(Map<String, dynamic> json) => Odd(
       teamAway: json['teamAway'] as String?,
       teamHome: json['teamHome'] as String?,
       isLock: json['lock'] as bool?,
+      date: json['date'] as String?,
+      time: json['time'] as String?,
     );
 
 Map<String, dynamic> _$OddToJson(Odd instance) {
@@ -32,6 +34,8 @@ Map<String, dynamic> _$OddToJson(Odd instance) {
   writeNotNull('teamAway', instance.teamAway);
   writeNotNull('teamHome', instance.teamHome);
   writeNotNull('lock', instance.isLock);
+  writeNotNull('date', instance.date);
+  writeNotNull('time', instance.time);
   return val;
 }
 

@@ -1,4 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+
+import '../utils/day_helpers.dart';
 part 'odd.g.dart';
 
 @JsonSerializable(includeIfNull: false)
@@ -9,7 +11,9 @@ class Odd {
       this.matchId,
       this.teamAway,
       this.teamHome,
-      this.isLock
+      this.isLock,
+      this.date,
+      this.time
   });
 
   @JsonKey(name: "amount")
@@ -29,6 +33,12 @@ class Odd {
 
   @JsonKey(name: "lock")
   final bool? isLock;
+
+  @JsonKey(name: "date")
+  final String? date;
+
+  @JsonKey(name: "time")
+  final String? time;
 
   factory Odd.fromJson(Map<String, dynamic> json) => _$OddFromJson(json);
   Map<String, dynamic> toJson() => _$OddToJson(this);
@@ -65,6 +75,12 @@ class Odd {
     }
 
     return "$teamAway chấp đội $teamHome $label quả";
+  }
+
+
+  @JsonKey(ignore: true)
+  DateTime? get dateTime {
+    return DateHelper.parseDateTime(input: "${date} ${time}", format: "dd/MM HH:mm");
   }
 
 }

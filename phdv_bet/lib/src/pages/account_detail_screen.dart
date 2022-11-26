@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/src/color.dart';
+import 'package:web_dashboard/src/model/odd.dart';
 import 'package:web_dashboard/src/model/user.dart';
 import 'package:web_dashboard/src/utils/constants.dart';
 import 'package:web_dashboard/src/utils/screen_helper.dart';
@@ -28,6 +29,7 @@ class AccountDetailScreen extends StatelessWidget {
   UserApi? _userApi;
   FootballMatchApi? _matchApi;
   List<FootballMatch> _allMatches = [];
+  List<Odd> _allOdds = [];
   late BuildContext _context;
   StreamController<UserBet> _userBetStream = StreamController();
 
@@ -42,11 +44,14 @@ class AccountDetailScreen extends StatelessWidget {
     final allBets = await _betApi?.list();
 
     /// Danh sach trận đã kết thúc
-    var matches = await _matchApi?.list();
-    _allMatches = matches ?? [];
+    final matches = await _matchApi?.list() ?? [];
+    matches.sort(((b, a) => ((a.date ?? DateTime.now())).compareTo((b.date ?? DateTime.now()))));
+    _allMatches = matches;
 
     /// Danh sách kèo đã khoá không cho bet nữa
-    final allOddsLocked = await _oddApi?.list(isFillterLocked: true);
+    final allOddsLocked = await _oddApi?.list(isFillterLocked: true) ?? [];
+    allOddsLocked.sort(((b, a) => ((a.dateTime ?? DateTime.now())).compareTo((b.dateTime ?? DateTime.now()))));
+    _allOdds = allOddsLocked;
 
     /// Get user info
     final userId = FirAuth.FirebaseAuth.instance.currentUser!.uid;
@@ -55,11 +60,11 @@ class AccountDetailScreen extends StatelessWidget {
     final userBet = BetHelper.getUserBetData(
         user: user!,
         bets: allBets ?? [],
-        matchs: matches ?? [],
-        odds: allOddsLocked ?? []);
+        matchs: matches,
+        odds: allOddsLocked);
 
     final betDoestPlay = BetHelper.getUserBetDoesNotPlay(
-        user: user, bets: allBets ?? [], matchs: matches ?? []);
+        user: user, bets: allBets ?? [], matchs: matches);
 
     final listBet = userBet.bets + betDoestPlay.bets;
     final betData = UserBet(user, listBet);
@@ -124,7 +129,7 @@ class AccountDetailScreen extends StatelessWidget {
           if (userBet == null || userBet.bets.isEmpty) {
             return _emptyView();
           }
-          userBet.bets.sort((a, b) => a.bet.matchId!.compareTo(b.bet.matchId!));
+
           return Padding(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -168,16 +173,24 @@ class AccountDetailScreen extends StatelessWidget {
 
   Widget _matchInfo(FootballMatch match, bool chooseHome,
       {bool isMissing = false}) {
-    return Row(
+    final odd = _allOdds.firstWhere((m) => m.matchId == match.matchId, orElse: () => Odd());
+    return Column(
       children: [
-        _teamHome(match, chooseHome, isMissing: isMissing),
-        SizedBox(width: 5),
-        match.finished == true
-            ? AppText("${match.homeScore ?? "-"} : ${match.awayScore ?? "-"}",
-                weight: FontWeight.bold)
-            : AppText("- : -", weight: FontWeight.bold),
-        SizedBox(width: 5),
-        _teamAway(match, !chooseHome, isMissing: isMissing)
+        Row(
+          children: [
+            _teamHome(match, chooseHome, isMissing: isMissing),
+            SizedBox(width: 5),
+            match.finished == true
+                ? AppText(
+                    "${match.homeScore ?? "-"} : ${match.awayScore ?? "-"}",
+                    weight: FontWeight.bold)
+                : AppText("- : -", weight: FontWeight.bold),
+            SizedBox(width: 5),
+            _teamAway(match, !chooseHome, isMissing: isMissing)
+          ],
+        ),
+        SizedBox(height: 10),
+        AppText(odd.desciption ?? "", color: SystemColor.GREY_LIGHT, size: 12)
       ],
     );
   }
