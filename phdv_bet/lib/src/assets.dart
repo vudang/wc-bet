@@ -20,6 +20,7 @@ class AppIcons {
   final String ic_bronze = "$root/3th_medal.png";
   final String ic_unknown_user = "$root/user.png";
   final String ball = "$root/ball.png";
+  final String budget = "$root/budget.png";
 }
 
 class AppImages {
