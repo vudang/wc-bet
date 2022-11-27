@@ -129,7 +129,8 @@ class _RankingScreenState extends State<RankingScreen> {
     return Column(
       children: [
         _totalBudget(listRanking),
-        Expanded(child: ListView.builder(
+        Expanded(
+            child: ListView.builder(
           itemCount: listRanking.length,
           itemBuilder: (ctx, index) {
             final ranking = listRanking[index];
@@ -146,14 +147,23 @@ class _RankingScreenState extends State<RankingScreen> {
   }
 
   Widget _totalBudget(List<UserBet> listRanking) {
-    int total = listRanking.map((e) => e.loseScore).reduce((value, element) => value + element);
+    int total = listRanking
+        .map((e) => e.loseScore)
+        .reduce((value, element) => value + element);
     return Card(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 20),
         child: Row(
           children: [
-            Expanded(child: Image.asset(Assets.icons.budget, width: 100, height: 100)),
-            Expanded(child: AppText("$total", size: 50, weight: FontWeight.w700, color: SystemColor.RED))
+            Expanded(
+                child: Image.asset(Assets.icons.fund, width: 100, height: 100)),
+            Expanded(
+                child: AppText(
+                    "₫${total > 1000 ? "${total / 1000}m" : "${total}k"}",
+                    size: 38,
+                    weight: FontWeight.w700,
+                    maxLines: 2,
+                    color: SystemColor.RED)),
           ],
         ),
       ),
@@ -188,8 +198,7 @@ class _RankingScreenState extends State<RankingScreen> {
     return CircleAvatar(
         backgroundColor: SystemColor.GREY_LIGHT.withOpacity(0.6),
         radius: 20,
-        child: AppNetworkImage(url: url)
-    );
+        child: AppNetworkImage(url: url));
   }
 
   Widget _ranking(int index) {
