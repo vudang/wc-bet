@@ -40,7 +40,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
     _userApi = api?.userApi;
     _configApi = api?.configApi;
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -75,9 +75,10 @@ class _WinnerScreenState extends State<WinnerScreen> {
     final userStream = _userApi?.get(userId).asStream();
     final winnerStream = _winnerApi?.subcribe();
     return StreamBuilder3<List<Team>, List<Winner>, Model.User?>(
-      streams: StreamTuple3(teamStream!, winnerStream!, userStream!),
-      builder: ((context, snapshots) {
-          final teams = snapshots.snapshot1.data?.where((e) => e.active == true) ?? [];
+        streams: StreamTuple3(teamStream!, winnerStream!, userStream!),
+        builder: ((context, snapshots) {
+          final teams =
+              snapshots.snapshot1.data?.where((e) => e.active == true) ?? [];
           final user = snapshots.snapshot3.data;
           final winners = snapshots.snapshot2.data ?? [];
           if (teams.isEmpty) {
@@ -87,12 +88,11 @@ class _WinnerScreenState extends State<WinnerScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: _contentView(teams.toList(), winners, user),
           );
-      })
-    );
+        }));
   }
 
-
-  Widget _contentView(List<Team> teams, List<Winner> winners, Model.User? user) {
+  Widget _contentView(
+      List<Team> teams, List<Winner> winners, Model.User? user) {
     if (ScreenHelper.isLargeScreen(context)) {
       return Row(
         children: [
@@ -110,24 +110,32 @@ class _WinnerScreenState extends State<WinnerScreen> {
       final count = winners.where((e) => e.teamId == team.id).length;
       team.winnerCount = count;
     });
-    teams.sort(((b, a) => (a.winnerCount ?? 0).compareTo((b.winnerCount ?? 0))));
+    teams
+        .sort(((b, a) => (a.winnerCount ?? 0).compareTo((b.winnerCount ?? 0))));
 
     return ListView.builder(
-          itemCount: teams.length,
-          itemBuilder: (ctx, index) {
-            final team = teams[index];
-            return Card(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: _teamRow(team, winners, user),
-              ),
-            );
-          },
+      itemCount: teams.length,
+      itemBuilder: (ctx, index) {
+        final team = teams[index];
+        return Card(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: _teamRow(team, winners, user),
+          ),
         );
+      },
+    );
   }
 
   Widget _teamRow(Team? team, List<Winner> winners, Model.User? user) {
-    final isChoosed = winners.firstWhere((e) => e.userId == FirebaseAuth.instance.currentUser?.uid && e.teamId == team?.id, orElse: () => Winner()).userId != null;
+    final isChoosed = winners
+            .firstWhere(
+                (e) =>
+                    e.userId == FirebaseAuth.instance.currentUser?.uid &&
+                    e.teamId == team?.id,
+                orElse: () => Winner())
+            .userId !=
+        null;
     return ListTile(
       leading: TeamFag(url: team?.flag ?? ""),
       trailing: GestureDetector(
@@ -156,21 +164,19 @@ class _WinnerScreenState extends State<WinnerScreen> {
       ),
     );
   }
-  
+
   Widget _detailWinnerView(List<Winner> winners) {
     return StreamBuilder<Team?>(
-      stream: _streamChoosedTeamController.stream,
-      builder: ((context, snapshot) {
-        final team = snapshot.data;
-        if (team == null) {
-          return Container();
-        }
+        stream: _streamChoosedTeamController.stream,
+        builder: ((context, snapshot) {
+          final team = snapshot.data;
+          if (team == null) {
+            return Container();
+          }
 
-        return WinnerReferenceScreen(team: team, winners: winners);
-      })
-    );
+          return WinnerReferenceScreen(team: team, winners: winners);
+        }));
   }
-
 
   Widget _avatar(Model.User? user) {
     final url = user?.photoUrl ?? "";
@@ -198,7 +204,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
       ),
     );
   }
-  
+
   _confirmSelectTeam(Team? team) async {
     final config = await _configApi?.get();
     final endTime = config?.winnerTimeEnd ?? "18:00 03/12/2022";
@@ -224,11 +230,12 @@ class _WinnerScreenState extends State<WinnerScreen> {
           });
 
       return;
-    } 
+    }
 
     final dialog = AppConfirmPopup(
-      title: "Are you sure ${team?.nameEn?.toUpperCase()} will be the Champion?",
-      message: "You can change utils $endTime",
+      title:
+          "Are you sure ${team?.nameEn?.toUpperCase()} will be the Champion?",
+      message: "You can change until $endTime",
       positiveButton: "BET ${team?.nameEn}",
       negativeButton: "Cancel",
       onNegativePressed: () {
@@ -247,25 +254,24 @@ class _WinnerScreenState extends State<WinnerScreen> {
           return dialog;
         });
   }
-  
+
   _onPlaceBet(Team? team) async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    final winner = Winner(
-      teamId: team?.id, 
-      userId: userId,
-      date: DateTime.now()
-    );
+    final winner =
+        Winner(teamId: team?.id, userId: userId, date: DateTime.now());
 
     Indicator.show(context);
     await _winnerApi?.placeWinner(winner);
     Indicator.hide(context);
   }
-  
+
   _showWinnerRefView(Team team, List<Winner> winners) {
     if (ScreenHelper.isLargeScreen(context)) {
       _streamChoosedTeamController.add(team);
     } else {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => WinnerReferenceScreen(team: team, winners: winners)));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              WinnerReferenceScreen(team: team, winners: winners)));
     }
   }
 }
